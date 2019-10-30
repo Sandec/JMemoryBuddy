@@ -13,6 +13,18 @@ dependencies {
 }
 ```
 
+### Quickstart:
+```
+@Test
+public void simpleTest() {
+    A referenced = new A();
+    MemoryLeakUtils.doMemTest(checker -> {
+        A notReferenced = new A();
+        checker.accept(notReferenced); // not referenced should be collectable
+    });
+}
+```
+
 ##### internal developer
 publish local:
 ```
