@@ -1,4 +1,5 @@
 #JMemoryBuddy
+[![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy)
 
 
 Gradle
