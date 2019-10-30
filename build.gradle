@@ -11,10 +11,41 @@ repositories {
   jcenter()
 }
 
+group = 'com.sandec'
+version = '0.0.1'
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 java {
   publishJavadoc()
   publishSources()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      groupId project.group
+      artifactId "jmemorybuddy"
+      version project.version
+    }
+  }
+}
+
+
+bintray {
+  if(project.hasProperty("BINTRAY_USER")) {
+    user = BINTRAY_USER
+    key  = BINTRAY_KEY
+  }
+  publications = ['mavenJava']
+  publish = true
+  override = true
+  pkg {
+    repo = 'repo'
+    name = project.name
+    userOrg = 'sandec'
+  }
 }
