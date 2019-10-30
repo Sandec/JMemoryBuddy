@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - openjdk11
+
+os:
+  - linux
+
+script:
+  - ./gradlew :jar :test
