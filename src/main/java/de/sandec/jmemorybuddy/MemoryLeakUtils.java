@@ -5,6 +5,8 @@ import javax.management.MBeanServer;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -65,7 +67,10 @@ public class MemoryLeakUtils {
 
     public static void doHeapDump() {
         try {
-            getHotspotMBean().dumpHeap("./heapdump-"+new java.util.Date()+".hprof", true);
+            String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String fileName = "./heapdump-" + dateString + ".hprof";
+            System.out.println("Creating Heapdump at: " + new java.io.File(dateString).getAbsolutePath());
+            getHotspotMBean().dumpHeap(fileName, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
