@@ -69,7 +69,7 @@ public class MemoryLeakUtils {
         try {
             String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             String fileName = "./heapdump-" + dateString + ".hprof";
-            System.out.println("Creating Heapdump at: " + new java.io.File(dateString).getAbsolutePath());
+            System.out.println("Creating Heapdump at: " + new java.io.File(fileName).getAbsolutePath());
             getHotspotMBean().dumpHeap(fileName, true);
         } catch (IOException e) {
             e.printStackTrace();
