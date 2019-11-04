@@ -11,12 +11,17 @@ repositories {
   jcenter()
 }
 
-group = 'de.sandec'
-version = '0.0.2-SNAPSHOT'
-
 apply plugin: 'java'
-apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+
+group = 'de.sandec'
+archivesBaseName = "JMemoryBuddy"
+version = '0.0.2'
+
 
 java {
   publishJavadoc()
@@ -29,6 +34,7 @@ dependencies {
   testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -36,6 +42,57 @@ publishing {
       groupId project.group
       artifactId "jmemorybuddy"
       version project.version
+    }
+  }
+}
+
+if (project.hasProperty('ossrhUsername')) {
+    signing {
+        sign configurations.archives
+    }
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+          name 'JMemoryBuddy'
+          packaging 'jar'
+          // optionally artifactId can be defined here
+          description 'A library usefull for unit testing memory leaks'
+          url 'https://github.com/Sandec/jmemorybuddy'
+
+          scm {
+            connection 'https://github.com/Sandec/JMemoryBuddy.git'
+            developerConnection 'https://github.com/Sandec/JMemoryBuddy.git'
+            url 'https://github.com/Sandec/JMemoryBuddy.git'
+          }
+
+          licenses {
+            license {
+              name 'The Apache License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+
+          developers {
+            developer {
+              id 'floriankirmaier'
+              name 'Florian Kirmaier'
+              email 'florian.kirmaier@gmail.com'
+            }
+          }
+        }
+      }
     }
   }
 }
