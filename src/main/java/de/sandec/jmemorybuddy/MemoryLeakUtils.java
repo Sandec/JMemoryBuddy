@@ -11,10 +11,14 @@ import java.util.function.Function;
 
 public class MemoryLeakUtils {
 
+    static int steps = 10;
+    static int overallTime = 5000;
+    static int sleepTime = overallTime / steps;
+
     public static void createGarbage() {
         LinkedList list = new LinkedList<Integer>();
         int counter = 0;
-        while(counter < 9999) {
+        while(counter < 999999) {
             counter += 1;
             list.add(1);
         }
@@ -22,14 +26,11 @@ public class MemoryLeakUtils {
 
     public static void assertCollectable(WeakReference weakReference) {
         int counter = 0;
-        int steps = 20;
-        int overallTime = 5000;
-        int sleepTime = overallTime / steps;
 
         createGarbage();
         System.gc();
 
-        while(counter < steps && weakReference.get() == null) {
+        while(counter < steps && weakReference.get() != null) {
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {}
@@ -43,7 +44,8 @@ public class MemoryLeakUtils {
             throw new RuntimeException("Content of Weakreference was not collected. content: " + weakReference.get());
         } else {
             if(counter > steps / 3) {
-                System.out.println("Warning test seems to be unsable.");
+                int percentageUsed = (int) (counter / steps * 100);
+                System.out.println("Warning test seems to be unstable. time used: " + percentageUsed + "%");
             }
         }
 
@@ -63,7 +65,7 @@ public class MemoryLeakUtils {
 
     public static void doHeapDump() {
         try {
-            getHotspotMBean().dumpHeap("./heapdump.hprof", true);
+            getHotspotMBean().dumpHeap("./heapdump-"+new java.util.Date()+".hprof", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
