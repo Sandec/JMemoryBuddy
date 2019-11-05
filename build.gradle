@@ -23,15 +23,29 @@ archivesBaseName = "JMemoryBuddy"
 version = '0.0.2'
 
 
-java {
-  publishJavadoc()
-  publishSources()
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives javadocJar, sourcesJar
 }
 
 dependencies {
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
   testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+}
+
+test {
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
 }
 
 
