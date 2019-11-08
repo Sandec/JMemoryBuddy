@@ -10,14 +10,14 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>11.1.0</version>
+  <version>0.1.0</version>
 </dependency>
 ```
 
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.0.2"
+    compile "de.sandec:JMemoryBuddy:0.1.0"
 }
 ```
 
@@ -63,7 +63,7 @@ publish local:
 ./gradlew publishToMavenLocal
 ```
 
-publish to bintray:
+publish to sonatype:
 ```
-./gradlew bintrayUpload
+./gradlew uploadArchives
 ```
