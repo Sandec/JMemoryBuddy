@@ -54,7 +54,7 @@ publishing {
     mavenJava(MavenPublication) {
       from components.java
       groupId project.group
-      artifactId "jmemorybuddy"
+      artifactId "JMemoryBuddy"
       version project.version
     }
   }
