@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class MemoryLeakUtils {
+public class JMemoryBuddy {
 
     static int steps = 10;
     static int overallTime = 5000;
