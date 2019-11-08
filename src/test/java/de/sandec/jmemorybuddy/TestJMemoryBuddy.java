@@ -31,6 +31,25 @@ public class TestJMemoryBuddy {
     }
 
     @Test
+    public void simpleTest3() {
+        for(int i = 0; i < 5; i += 1) {
+            A referenced = new A();
+            JMemoryBuddy.doMemTest(checker -> {
+                A notReferenced = new A();
+                checker.assertCollectable(notReferenced); // not referenced should be collectable
+                for (int j = 0; j <= 10; j += 1) {
+                    JMemoryBuddy.createGarbage();
+                    try {
+                        Thread.sleep(10);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
+    }
+
+    @Test
     public void simpleTestRepeated() {
         for(int i = 0; i < 100; i += 1) {
             A referenced = new A();

@@ -26,9 +26,9 @@ dependencies {
 @Test
 public void simpleTest() {
     A referenced = new A();
-    MemoryLeakUtils.doMemTest(checker -> {
+    JMemoryBuddy.doMemTest(checker -> {
         A notReferenced = new A();
-        checker.accept(notReferenced); // not referenced should be collectable
+        checker.assertCollectable(notReferenced); // not referenced should be collectable
     });
 }
 ```
