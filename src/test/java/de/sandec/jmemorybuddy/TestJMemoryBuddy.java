@@ -15,7 +15,18 @@ public class TestJMemoryBuddy {
         A referenced = new A();
         JMemoryBuddy.doMemTest(checker -> {
             A notReferenced = new A();
-            checker.accept(notReferenced); // not referenced should be collectable
+            checker.assertCollectable(notReferenced); // not referenced should be collectable
+        });
+    }
+
+    @Test
+    public void simpleTest2() {
+        JMemoryBuddy.doMemTest(checker -> {
+            A referenced = new A();
+            A notReferenced = new A();
+            checker.setAsReferenced(referenced);
+            checker.assertNotCollectable(referenced);
+            checker.assertCollectable(notReferenced); // not referenced should be collectable
         });
     }
 
@@ -25,7 +36,7 @@ public class TestJMemoryBuddy {
             A referenced = new A();
             JMemoryBuddy.doMemTest(checker -> {
                 A notReferenced = new A();
-                checker.accept(notReferenced); // not referenced should be collectable
+                checker.assertCollectable(notReferenced); // not referenced should be collectable
             });
         }
     }
@@ -36,7 +47,7 @@ public class TestJMemoryBuddy {
         try {
             A referenced = new A();
             JMemoryBuddy.doMemTest(checker -> {
-                checker.accept(referenced);
+                checker.assertCollectable(referenced);
             });
         } catch (Exception e) {
             exceptionThrown = true;
