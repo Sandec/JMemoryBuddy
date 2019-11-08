@@ -20,7 +20,7 @@ apply plugin: 'signing'
 
 group = 'de.sandec'
 archivesBaseName = "JMemoryBuddy"
-version = '0.1.0'
+version = '0.1.1'
 
 
 task javadocJar(type: Jar) {
