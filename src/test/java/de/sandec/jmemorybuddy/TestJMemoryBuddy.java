@@ -68,7 +68,7 @@ public class TestJMemoryBuddy {
             JMemoryBuddy.doMemTest(checker -> {
                 checker.assertCollectable(referenced);
             });
-        } catch (Exception e) {
+        } catch (AssertionError e) {
             exceptionThrown = true;
         }
         Assert.assertTrue("No exception was thrown!", exceptionThrown);

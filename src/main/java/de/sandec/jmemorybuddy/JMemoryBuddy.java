@@ -43,7 +43,7 @@ public class JMemoryBuddy {
 
         if(weakReference.get() != null) {
             doHeapDump();
-            throw new RuntimeException("Content of Weakreference was not collected. content: " + weakReference.get());
+            throw new AssertionError("Content of Weakreference was not collected. content: " + weakReference.get());
         } else {
             if(counter > steps / 3) {
                 int percentageUsed = (int) (counter / steps * 100);
@@ -55,7 +55,7 @@ public class JMemoryBuddy {
         createGarbage();
         System.gc();
         if(weakReference.get() == null) {
-            throw new RuntimeException("Content of Weakreference was collected!");
+            throw new AssertionError("Content of Weakreference was collected!");
         }
     }
 
