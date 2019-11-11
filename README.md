@@ -54,8 +54,8 @@ There are various reason
 
 
 ## Projects using JMemoryBuddy:
-* [https://jpro.one/](jpro.one - aka javafx for the web)
-* [https://github.com/Sandec/JMemoryBuddy/pulls](Your project?)
+* [jpro.one](https://jpro.one/) - aka javafx for the web
+* [Your project?](https://github.com/Sandec/JMemoryBuddy/pulls)
 
 ##### internal developer
 publish local:
