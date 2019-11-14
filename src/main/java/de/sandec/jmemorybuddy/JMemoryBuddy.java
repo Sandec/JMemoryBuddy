@@ -26,7 +26,7 @@ public class JMemoryBuddy {
         }
     }
 
-    public static void assertWeakreferenceAsCollectable(WeakReference weakReference) {
+    public static void assertWeakReferenceAsCollectable(WeakReference weakReference) {
         int counter = 0;
 
         createGarbage();
