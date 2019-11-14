@@ -26,7 +26,7 @@ public class JMemoryBuddy {
         }
     }
 
-    public static void assertWeakReferenceAsCollectable(WeakReference weakReference) {
+    public static void assertCollectable(WeakReference weakReference) {
         int counter = 0;
 
         createGarbage();
@@ -42,8 +42,8 @@ public class JMemoryBuddy {
         }
 
         if(weakReference.get() != null) {
-            doHeapDump();
-            throw new AssertionError("Content of Weakreference was not collected. content: " + weakReference.get());
+            createHeapDump();
+            throw new AssertionError("Content of WeakReference was not collected. content: " + weakReference.get());
         } else {
             if(counter > steps / 3) {
                 int percentageUsed = (int) (counter / steps * 100);
@@ -51,20 +51,20 @@ public class JMemoryBuddy {
             }
         }
     }
-    public static void assertWeakreferenceAsNotCollectable(WeakReference weakReference) {
+    public static void assertNotCollectable(WeakReference weakReference) {
         createGarbage();
         System.gc();
         if(weakReference.get() == null) {
-            throw new AssertionError("Content of Weakreference was collected!");
+            throw new AssertionError("Content of WeakReference was collected!");
         }
     }
 
-    public static void doMemTest(Consumer<MemTestHelper> f) {
+    public static void memoryTest(Consumer<MemeoryTestAPI> f) {
         LinkedList<AssertCollectable> toBeColelcted = new LinkedList<AssertCollectable>();
         LinkedList<AssertNotCollectable> toBeNotColelcted = new LinkedList<AssertNotCollectable>();
         LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<SetAsReferenced>();
 
-        f.accept(new MemTestHelper() {
+        f.accept(new MemeoryTestAPI() {
             public void assertCollectable(Object ref) {
                 toBeColelcted.add(new AssertCollectable(new WeakReference<Object>(ref)));
             }
@@ -77,16 +77,16 @@ public class JMemoryBuddy {
         });
 
         for(AssertCollectable wRef: toBeColelcted) {
-            assertWeakreferenceAsCollectable(wRef.getWeakReference());
+            assertCollectable(wRef.getWeakReference());
         }
         for(AssertNotCollectable wRef: toBeNotColelcted) {
-            assertWeakreferenceAsNotCollectable(wRef.getWeakReference());
+            assertNotCollectable(wRef.getWeakReference());
         }
 
     }
 
 
-    public static void doHeapDump() {
+    public static void createHeapDump() {
         try {
             String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
             String fileName = "heapdump_jmemb_" + dateString + ".hprof";
@@ -105,7 +105,7 @@ public class JMemoryBuddy {
         return bean;
     }
 
-    public static interface MemTestHelper {
+    public static interface MemeoryTestAPI {
         public void assertCollectable(Object ref);
         public void assertNotCollectable(Object ref);
         public void setAsReferenced(Object ref);

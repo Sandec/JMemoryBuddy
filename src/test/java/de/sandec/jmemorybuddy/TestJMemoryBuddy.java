@@ -13,7 +13,7 @@ public class TestJMemoryBuddy {
     @Test
     public void simpleTest() {
         A referenced = new A();
-        JMemoryBuddy.doMemTest(checker -> {
+        JMemoryBuddy.memoryTest(checker -> {
             A notReferenced = new A();
             checker.assertCollectable(notReferenced); // not referenced should be collectable
         });
@@ -21,7 +21,7 @@ public class TestJMemoryBuddy {
 
     @Test
     public void simpleTest2() {
-        JMemoryBuddy.doMemTest(checker -> {
+        JMemoryBuddy.memoryTest(checker -> {
             A referenced = new A();
             A notReferenced = new A();
             checker.setAsReferenced(referenced);
@@ -34,7 +34,7 @@ public class TestJMemoryBuddy {
     public void simpleTest3() {
         for(int i = 0; i < 5; i += 1) {
             A referenced = new A();
-            JMemoryBuddy.doMemTest(checker -> {
+            JMemoryBuddy.memoryTest(checker -> {
                 A notReferenced = new A();
                 checker.assertCollectable(notReferenced); // not referenced should be collectable
                 for (int j = 0; j <= 10; j += 1) {
@@ -53,7 +53,7 @@ public class TestJMemoryBuddy {
     public void simpleTestRepeated() {
         for(int i = 0; i < 100; i += 1) {
             A referenced = new A();
-            JMemoryBuddy.doMemTest(checker -> {
+            JMemoryBuddy.memoryTest(checker -> {
                 A notReferenced = new A();
                 checker.assertCollectable(notReferenced); // not referenced should be collectable
             });
@@ -65,7 +65,7 @@ public class TestJMemoryBuddy {
         boolean exceptionThrown = false;
         try {
             A referenced = new A();
-            JMemoryBuddy.doMemTest(checker -> {
+            JMemoryBuddy.memoryTest(checker -> {
                 checker.assertCollectable(referenced);
             });
         } catch (AssertionError e) {
@@ -76,6 +76,6 @@ public class TestJMemoryBuddy {
 
     @Test
     public void testCreateHeapDump() {
-        JMemoryBuddy.doHeapDump(); // shouldn't throw an exception
+        JMemoryBuddy.createHeapDump(); // shouldn't throw an exception
     }
 }
