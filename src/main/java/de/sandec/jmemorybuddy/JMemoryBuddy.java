@@ -66,12 +66,15 @@ public class JMemoryBuddy {
 
         f.accept(new MemeoryTestAPI() {
             public void assertCollectable(Object ref) {
+                if(ref == null) throw new NullPointerException();
                 toBeColelcted.add(new AssertCollectable(new WeakReference<Object>(ref)));
             }
             public void assertNotCollectable(Object ref) {
+                if(ref == null) throw new NullPointerException();
                 toBeNotColelcted.add(new AssertNotCollectable(new WeakReference<Object>(ref)));
             }
             public void setAsReferenced(Object ref) {
+                if(ref == null) throw new NullPointerException();
                 toBeReferenced.add(new SetAsReferenced(ref));
             }
         });
