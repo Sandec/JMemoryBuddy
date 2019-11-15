@@ -10,14 +10,14 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
 </dependency>
 ```
 
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.1.2"
+    compile "de.sandec:JMemoryBuddy:0.1.3"
 }
 ```
 
@@ -26,7 +26,7 @@ dependencies {
 @Test
 public void simpleTest() {
     A referenced = new A();
-    JMemoryBuddy.doMemTest(checker -> {
+    JMemoryBuddy.memoryTest(checker -> {
         A notReferenced = new A();
         checker.assertCollectable(notReferenced); // not referenced should be collectable
     });
