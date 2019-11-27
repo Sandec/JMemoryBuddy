@@ -1,7 +1,11 @@
 # JMemoryBuddy
 [![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy)
 
-This library provides an API to unit-test your code for memory leaks.
+JMemoryBuddy provides an API to unit-test your code for memory leaks.
+It was used for internal project at Sandec, especially for [JPro](https://www.jpro.one/). 
+We've made it public, so everyone can fix and test their code for memoryleaks in a **proffesional** way.
+
+**Together we can fix all memory leaks in the world. :-)** 
 
 ## Dependency
 The library is published at MavenCentral
@@ -11,6 +15,7 @@ The library is published at MavenCentral
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
   <version>0.1.3</version>
+  <scope>test</scope>
 </dependency>
 ```
 
