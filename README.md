@@ -38,11 +38,11 @@ public void simpleTest() {
 }
 ```
 
-
+    
 ## FAQ - Why is no one else writing unit-tests for memory leaks?
 
 There are various reasons for this. By spec the command `System.gc()` doesn't have to do anything, 
-This makes it hard and undeterministic to test for collectability. Nevertheless, **MemoryBuddy makes testing for memory leaks reliable!**
+This makes it hard and undeterministic to test for collectability. Nevertheless, **JMemoryBuddy makes testing for memory leaks reliable!**
 
 
 ## Projects using JMemoryBuddy:

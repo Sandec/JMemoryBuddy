@@ -60,18 +60,18 @@ public class JMemoryBuddy {
     }
 
     public static void memoryTest(Consumer<MemeoryTestAPI> f) {
-        LinkedList<AssertCollectable> toBeColelcted = new LinkedList<AssertCollectable>();
-        LinkedList<AssertNotCollectable> toBeNotColelcted = new LinkedList<AssertNotCollectable>();
+        LinkedList<AssertCollectable> toBeCollected = new LinkedList<AssertCollectable>();
+        LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<AssertNotCollectable>();
         LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<SetAsReferenced>();
 
         f.accept(new MemeoryTestAPI() {
             public void assertCollectable(Object ref) {
                 if(ref == null) throw new NullPointerException();
-                toBeColelcted.add(new AssertCollectable(new WeakReference<Object>(ref)));
+                toBeCollected.add(new AssertCollectable(new WeakReference<Object>(ref)));
             }
             public void assertNotCollectable(Object ref) {
                 if(ref == null) throw new NullPointerException();
-                toBeNotColelcted.add(new AssertNotCollectable(new WeakReference<Object>(ref)));
+                toBeNotCollected.add(new AssertNotCollectable(new WeakReference<Object>(ref)));
             }
             public void setAsReferenced(Object ref) {
                 if(ref == null) throw new NullPointerException();
@@ -79,10 +79,10 @@ public class JMemoryBuddy {
             }
         });
 
-        for(AssertCollectable wRef: toBeColelcted) {
+        for(AssertCollectable wRef: toBeCollected) {
             assertCollectable(wRef.getWeakReference());
         }
-        for(AssertNotCollectable wRef: toBeNotColelcted) {
+        for(AssertNotCollectable wRef: toBeNotCollected) {
             assertNotCollectable(wRef.getWeakReference());
         }
 
