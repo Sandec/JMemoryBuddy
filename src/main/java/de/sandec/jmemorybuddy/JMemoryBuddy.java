@@ -108,7 +108,7 @@ public class JMemoryBuddy {
         return bean;
     }
 
-    public static interface MemeoryTestAPI {
+    public static interface MemoryTestAPI {
         public void assertCollectable(Object ref);
         public void assertNotCollectable(Object ref);
         public void setAsReferenced(Object ref);
