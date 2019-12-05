@@ -59,12 +59,12 @@ public class JMemoryBuddy {
         }
     }
 
-    public static void memoryTest(Consumer<MemeoryTestAPI> f) {
+    public static void memoryTest(Consumer<MemoryTestAPI> f) {
         LinkedList<AssertCollectable> toBeCollected = new LinkedList<AssertCollectable>();
         LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<AssertNotCollectable>();
         LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<SetAsReferenced>();
 
-        f.accept(new MemeoryTestAPI() {
+        f.accept(new MemoryTestAPI() {
             public void assertCollectable(Object ref) {
                 if(ref == null) throw new NullPointerException();
                 toBeCollected.add(new AssertCollectable(new WeakReference<Object>(ref)));
