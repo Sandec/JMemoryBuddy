@@ -16,7 +16,7 @@ public class JMemoryBuddy {
     static int steps = 10;
     static int overallTime = 5000;
     static int sleepTime = overallTime / steps;
-    static final String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
+    private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
 
     public static void createGarbage() {
         LinkedList list = new LinkedList<Integer>();
@@ -99,6 +99,10 @@ public class JMemoryBuddy {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private static setMxBeanProxyName(String mxBeanName) {
+        MX_BEAN_PROXY_TYPE = mxBeanName;   
     }
 
     private static HotSpotDiagnosticMXBean getHotspotMBean() throws IOException {
