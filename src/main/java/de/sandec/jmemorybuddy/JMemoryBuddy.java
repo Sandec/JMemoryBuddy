@@ -101,7 +101,7 @@ public class JMemoryBuddy {
         }
     }
     
-    private static setMxBeanProxyName(String mxBeanName) {
+    private static void setMxBeanProxyName(String mxBeanName) {
         MX_BEAN_PROXY_TYPE = mxBeanName;   
     }
 
