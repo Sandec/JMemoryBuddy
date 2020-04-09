@@ -14,7 +14,7 @@ import java.util.function.Function;
 public class JMemoryBuddy {
 
     static int steps = 10;
-    static int overallTime = 5000;
+    static int overallTime = 1000;
     static int sleepTime = overallTime / steps;
     private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
 
@@ -40,6 +40,7 @@ public class JMemoryBuddy {
             counter = counter + 1;
             createGarbage();
             System.gc();
+            System.runFinalization();
         }
 
         if(weakReference.get() != null) {
@@ -53,7 +54,6 @@ public class JMemoryBuddy {
         }
     }
     public static void assertNotCollectable(WeakReference weakReference) {
-        createGarbage();
         System.gc();
         if(weakReference.get() == null) {
             throw new AssertionError("Content of WeakReference was collected!");
