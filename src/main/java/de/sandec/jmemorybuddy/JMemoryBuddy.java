@@ -28,6 +28,14 @@ public class JMemoryBuddy {
     }
 
     public static void assertCollectable(WeakReference weakReference) {
+        if(!checkCollectable(weakReference)) {
+            AssertCollectable assertCollectable = new AssertCollectable(weakReference);
+            createHeapDump();
+            throw new AssertionError("Content of WeakReference was not collected. content: " + weakReference.get());
+        }
+    }
+
+    public static boolean checkCollectable(WeakReference weakReference) {
         int counter = 0;
 
         createGarbage();
@@ -43,36 +51,37 @@ public class JMemoryBuddy {
             System.runFinalization();
         }
 
-        if(weakReference.get() != null) {
-            createHeapDump();
-            throw new AssertionError("Content of WeakReference was not collected. content: " + weakReference.get());
-        } else {
-            if(counter > steps / 3) {
-                int percentageUsed = (int) (counter / steps * 100);
-                System.out.println("Warning test seems to be unstable. time used: " + percentageUsed + "%");
-            }
+        if(weakReference.get() == null && counter > steps / 3) {
+            int percentageUsed = (int) (counter / steps * 100);
+            System.out.println("Warning test seems to be unstable. time used: " + percentageUsed + "%");
         }
+
+        return weakReference.get() == null;
     }
+
     public static void assertNotCollectable(WeakReference weakReference) {
-        System.gc();
-        if(weakReference.get() == null) {
+        if(!checkNotCollectable(weakReference)) {
             throw new AssertionError("Content of WeakReference was collected!");
         }
     }
+    public static boolean checkNotCollectable(WeakReference weakReference) {
+        System.gc();
+        return weakReference.get() != null;
+    }
 
     public static void memoryTest(Consumer<MemoryTestAPI> f) {
-        LinkedList<AssertCollectable> toBeCollected = new LinkedList<AssertCollectable>();
-        LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<AssertNotCollectable>();
+        LinkedList<WeakReference> toBeCollected = new LinkedList<WeakReference>();
+        LinkedList<WeakReference> toBeNotCollected = new LinkedList<WeakReference>();
         LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<SetAsReferenced>();
 
         f.accept(new MemoryTestAPI() {
             public void assertCollectable(Object ref) {
                 if(ref == null) throw new NullPointerException();
-                toBeCollected.add(new AssertCollectable(new WeakReference<Object>(ref)));
+                toBeCollected.add(new WeakReference<Object>(ref));
             }
             public void assertNotCollectable(Object ref) {
                 if(ref == null) throw new NullPointerException();
-                toBeNotCollected.add(new AssertNotCollectable(new WeakReference<Object>(ref)));
+                toBeNotCollected.add(new WeakReference<Object>(ref));
             }
             public void setAsReferenced(Object ref) {
                 if(ref == null) throw new NullPointerException();
@@ -80,12 +89,35 @@ public class JMemoryBuddy {
             }
         });
 
-        for(AssertCollectable wRef: toBeCollected) {
-            assertCollectable(wRef.getWeakReference());
+        boolean failed = false;
+        WeakReference wrongWeakref = null;
+
+        for(WeakReference wRef: toBeCollected) {
+            if(!checkCollectable(wRef)) {
+                failed = true;
+                wrongWeakref = wRef;
+            };
         }
-        for(AssertNotCollectable wRef: toBeNotCollected) {
-            assertNotCollectable(wRef.getWeakReference());
+        for(WeakReference wRef: toBeNotCollected) {
+            if(!checkNotCollectable(wRef)) {
+                failed = true;
+            };
         }
+
+        if(failed) {
+            LinkedList<AssertCollectable> toBeCollectedMarked = new LinkedList<AssertCollectable>();
+            LinkedList<AssertNotCollectable> toBeNotCollectedMarked = new LinkedList<AssertNotCollectable>();
+
+            for(WeakReference wRef: toBeCollected) {
+                toBeCollectedMarked.add(new AssertCollectable(wRef));
+            }
+            for(WeakReference wRef: toBeNotCollected) {
+                toBeNotCollectedMarked.add(new AssertNotCollectable(wRef));
+            }
+            createHeapDump();
+            throw new AssertionError("The following references should be collected: " + toBeCollectedMarked);
+        }
+
 
     }
 
