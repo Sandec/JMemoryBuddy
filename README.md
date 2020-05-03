@@ -14,7 +14,7 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.1.4</version>
+  <version>0.2.0</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -22,7 +22,7 @@ The library is published at MavenCentral
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.1.4"
+    compile "de.sandec:JMemoryBuddy:0.2.0"
 }
 ```
 
@@ -38,6 +38,24 @@ public void simpleTest() {
 }
 ```
 
+It's easy to find the object, which were marked with "assertColectable" but weren't collected.
+Just open the heapdump which was mentioned in the console output and filter for "AssertCollectable".
+After this you will find Instances which contains the problematic objects.
+
+![visualvm](/screenshot-visualvm.png "Logo Title Text 1")
+
+## Configure JMemoryBuddy
+
+You can configure VisualVM with SystemProperties:
+
+| Tables        | Are           | Default  |
+| ------------- |:-------------:| -----:|
+| -Djmemorybuddy.output    | The folder were the heapdump get's saved. | "." |
+| -Djmemorybuddy.steps     | Maximum number of times we check whether something is collectable. You probably shouldn't change it. | 10 |
+| -Djmemorybuddy.checktime | Maximum time in ms used to check whether something is collectable. You probably shouldn't change it. | 1000 |
+
+
+
     
 ## FAQ - Why is no one else writing unit-tests for memory leaks?
 
@@ -46,7 +64,8 @@ This makes it hard and undeterministic to test for collectability. Nevertheless,
 
 
 ## Projects using JMemoryBuddy:
-* [jpro.one](https://jpro.one/) - aka javafx for the web
+* [jpro.one](https://jpro.one/) - aka JavaFX for the web
+* [controlsfx](https://github.com/controlsfx/controlsfx) - A very often used Library for JavaFX
 * [Your project?](https://github.com/Sandec/JMemoryBuddy/pulls)
 
 ##### internal developer
