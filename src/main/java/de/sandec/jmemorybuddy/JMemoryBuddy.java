@@ -54,6 +54,7 @@ public class JMemoryBuddy {
         if(weakReference.get() != null) {
             createGarbage();
             System.gc();
+            System.runFinalization();
         }
 
         while(counter > 0 && weakReference.get() != null) {
