@@ -161,6 +161,12 @@ public class JMemoryBuddy {
         WeakReference<Object> getWeakReference() {
             return assertCollectable;
         }
+
+        @Override
+        public String toString() {
+            Object el = assertCollectable.get();
+            return el != null ? el.toString() : "null";
+        }
     }
 
     static class AssertNotCollectable {
