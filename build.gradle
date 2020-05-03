@@ -62,6 +62,12 @@ publishing {
   }
 }
 
+jar {
+  manifest {
+    attributes  'Automatic-Module-Name': "de.sandec.jmemorybuddy"
+  }
+}
+
 if (project.hasProperty('ossrhUsername')) {
     signing {
         sign configurations.archives

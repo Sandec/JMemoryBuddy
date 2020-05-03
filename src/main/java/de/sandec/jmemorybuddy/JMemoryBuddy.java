@@ -2,6 +2,7 @@ package de.sandec.jmemorybuddy;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import javax.management.MBeanServer;
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.ref.WeakReference;
@@ -17,6 +18,14 @@ public class JMemoryBuddy {
     static int overallTime = 1000;
     static int sleepTime = overallTime / steps;
     private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
+
+    static String outputFolderString = ".";
+
+    static {
+        outputFolderString = System.getProperty("jmemorybuddy.output",".");
+        overallTime = Integer.parseInt(System.getProperty("jmemorybuddy.checktime","1000"));
+        steps = Integer.parseInt(System.getProperty("jmemorybuddy.steps", "10"));
+    }
 
     public static void createGarbage() {
         LinkedList list = new LinkedList<Integer>();
@@ -136,8 +145,10 @@ public class JMemoryBuddy {
         try {
             String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
             String fileName = "heapdump_jmemb_" + dateString + ".hprof";
-            System.out.println("Creating Heapdump at: " + new java.io.File(fileName).getAbsolutePath());
-            getHotspotMBean().dumpHeap(fileName, true);
+            File outputFolder = new File(outputFolderString);
+            String heapdumpFile = new java.io.File(outputFolder,fileName).getAbsolutePath();
+            System.out.println("Creating Heapdump at: " + heapdumpFile);
+            getHotspotMBean().dumpHeap(heapdumpFile, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
