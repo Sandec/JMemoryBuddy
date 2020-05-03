@@ -36,27 +36,33 @@ public class JMemoryBuddy {
     }
 
     public static boolean checkCollectable(WeakReference weakReference) {
-        int counter = 0;
+        return checkCollectable(steps, weakReference) > 0;
+    }
 
-        createGarbage();
-        System.gc();
+    private static int checkCollectable(int stepsLeft, WeakReference weakReference) {
+        int counter = stepsLeft;
 
-        while(counter < steps && weakReference.get() != null) {
+        if(weakReference.get() != null) {
+            createGarbage();
+            System.gc();
+        }
+
+        while(counter > 0 && weakReference.get() != null) {
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {}
-            counter = counter + 1;
+            counter = counter - 1;
             createGarbage();
             System.gc();
             System.runFinalization();
         }
 
-        if(weakReference.get() == null && counter > steps / 3) {
-            int percentageUsed = (int) (counter / steps * 100);
+        if(weakReference.get() == null && counter < steps / 3) {
+            int percentageUsed = (int) ((steps - counter) / steps * 100);
             System.out.println("Warning test seems to be unstable. time used: " + percentageUsed + "%");
         }
 
-        return weakReference.get() == null;
+        return counter;
     }
 
     public static void assertNotCollectable(WeakReference weakReference) {
@@ -89,14 +95,14 @@ public class JMemoryBuddy {
             }
         });
 
+        int stepsLeft = steps;
         boolean failed = false;
-        WeakReference wrongWeakref = null;
 
         for(WeakReference wRef: toBeCollected) {
-            if(!checkCollectable(wRef)) {
-                failed = true;
-                wrongWeakref = wRef;
-            };
+            stepsLeft = checkCollectable(stepsLeft, wRef);
+        }
+        if(stepsLeft == 0) {
+            failed = true;
         }
         for(WeakReference wRef: toBeNotCollected) {
             if(!checkNotCollectable(wRef)) {
@@ -115,7 +121,11 @@ public class JMemoryBuddy {
                 toBeNotCollectedMarked.add(new AssertNotCollectable(wRef));
             }
             createHeapDump();
-            throw new AssertionError("The following references should be collected: " + toBeCollectedMarked);
+            if(toBeNotCollectedMarked.isEmpty()) {
+                throw new AssertionError("The following references should be collected: " + toBeCollectedMarked);
+            } else {
+                throw new AssertionError("The following references should be collected: " + toBeCollectedMarked + " and " + toBeNotCollectedMarked.size() + " should not be collected: ");
+            }
         }
 
 
