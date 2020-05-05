@@ -1,5 +1,5 @@
 # JMemoryBuddy
-[![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy)
+[![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy)
 
 JMemoryBuddy provides an API to unit-test your code for memory leaks.
 It was used for internal project at Sandec, especially for [JPro](https://www.jpro.one/). 
