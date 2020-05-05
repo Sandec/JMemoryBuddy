@@ -14,7 +14,7 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -22,27 +22,48 @@ The library is published at MavenCentral
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.2.0"
+    compile "de.sandec:JMemoryBuddy:0.2.1"
 }
 ```
 
-### Quickstart:
+## How to use:
+
+#### MemoryTest:
+
+The method `JMemoryBuddy.memoryTest` is the usual way to test for leaks with JMemoryBuddy.
+A typicial test might look like the following:
 ```
 @Test
 public void simpleTest() {
-    A referenced = new A();
     JMemoryBuddy.memoryTest(checker -> {
+        A referenced = new A();
+        checker.setAsReferenced(referenced);
         A notReferenced = new A();
-        checker.assertCollectable(notReferenced); // not referenced should be collectable
+        checker.assertCollectable(notReferenced); // notReferenced should be collectable
+        checker.assertNotCollectable(referenced); // referenced should not be collectable
     });
 }
 ```
 
-It's easy to find the object, which were marked with "assertColectable" but weren't collected.
-Just open the heapdump which was mentioned in the console output and filter for "AssertCollectable".
-After this you will find Instances which contains the problematic objects.
+The lambda provided to the memoryTest method is executed only once. The provided argument named "checker" provides an API to declare how the memory semantic should be.
+| Method        |            |
+| ------------- |:-------------:|
+| assertCollectable(ref)     | After executing the lambda, the provided ref must be collectable. Otherwise an Exception is thrown. |
+| assertNotCollectable(ref)     | After executing the lambda, the provided ref must be not collectable. Otherwise an Exception is thrown. |
+| setAsReferenced(ref)     | The provided reference won't be collected, until memoryTest finishes all it's tests.|
 
-![visualvm](/screenshot-visualvm.png "Logo Title Text 1")
+#### Other utlity methods:
+
+You can also use the method `assertCollectable` and `assertNotCollectable` to check whether a single WeakReference can be collected, but usually the `memoryTest` method is prefered because it results in more elegant tests.
+
+
+#### Analyzing the heapdump:
+JMemoryBuddy makes it easy to analyze the heapDump, because all problematic instances are wrapped inside a class with the name `AssertCollectable`. Just search your heapdump with your prefered tool for this classname:
+![visualvm](/screenshot-visualvm.png)
+
+
+
+
 
 ## Configure JMemoryBuddy
 
@@ -66,7 +87,7 @@ The following values usually shouldn't be changed but might be useful to make te
 ## FAQ - Why is no one else writing unit-tests for memory leaks?
 
 There are various reasons for this. By spec the command `System.gc()` doesn't have to do anything, 
-This makes it hard and undeterministic to test for collectability. Nevertheless, **JMemoryBuddy makes testing for memory leaks reliable!**
+This makes it hard and undeterministic to test for collectability. Nevertheless, **JMemoryBuddy makes testing for memory leaks reliable!**. Currently all known cases reliable and don't cause false negative test results.
 
 
 ## Projects using JMemoryBuddy:
