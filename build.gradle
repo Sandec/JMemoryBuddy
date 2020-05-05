@@ -20,7 +20,7 @@ apply plugin: 'signing'
 
 group = 'de.sandec'
 archivesBaseName = "JMemoryBuddy"
-version = '0.2.0'
+version = '0.2.1'
 
 sourceCompatibility = 8
 targetCompatibility = 8

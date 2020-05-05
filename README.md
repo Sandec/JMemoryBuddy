@@ -48,11 +48,17 @@ After this you will find Instances which contains the problematic objects.
 
 You can configure VisualVM with SystemProperties:
 
-| Tables        | Are           | Default  |
+| Tables        | Effect           | Default  |
 | ------------- |:-------------:| -----:|
+| -Djmemorybuddy.createHeapDump    | Should a heapdump created on failure? | true |
 | -Djmemorybuddy.output    | The folder were the heapdump get's saved. | "." |
+
+The following values usually shouldn't be changed but might be useful to make tests more stable or reduce the time required.
+| Tables        | Effect           | Default  |
+| ------------- |:-------------:| -----:|
 | -Djmemorybuddy.steps     | Maximum number of times we check whether something is collectable. You probably shouldn't change it. | 10 |
 | -Djmemorybuddy.checktime | Maximum time in ms used to check whether something is collectable. You probably shouldn't change it. | 1000 |
+| -Djmemorybuddy.garbageAmount     | How much garbage is created to stimulate the garbage collector | 999999 |
 
 
 

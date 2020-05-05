@@ -1,4 +1,5 @@
-
+### 0.2.1
+ * The following values are now also configurable: `-Djmemorybuddy.createHeapDump` and `-Djmemorybuddy.garbageAmount` 
 ### 0.2.0
  * Added "Automatic-Module-Name" for better compatibility with jigsaw / Java11.
  * Various variables are now configurable with systemproperties.

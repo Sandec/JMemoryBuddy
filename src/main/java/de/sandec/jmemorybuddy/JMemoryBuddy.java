@@ -17,6 +17,8 @@ public class JMemoryBuddy {
     static int steps = 10;
     static int overallTime = 1000;
     static int sleepTime = overallTime / steps;
+    static boolean createHeapdump = true;
+    static int garbageAmount = 999999;
     private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
 
     static String outputFolderString = ".";
@@ -25,12 +27,14 @@ public class JMemoryBuddy {
         outputFolderString = System.getProperty("jmemorybuddy.output",".");
         overallTime = Integer.parseInt(System.getProperty("jmemorybuddy.checktime","1000"));
         steps = Integer.parseInt(System.getProperty("jmemorybuddy.steps", "10"));
+        createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "true"));
+        garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "10"));
     }
 
     public static void createGarbage() {
         LinkedList list = new LinkedList<Integer>();
         int counter = 0;
-        while(counter < 999999) {
+        while(counter < garbageAmount) {
             counter += 1;
             list.add(1);
         }
@@ -143,15 +147,19 @@ public class JMemoryBuddy {
 
 
     public static void createHeapDump() {
-        try {
-            String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
-            String fileName = "heapdump_jmemb_" + dateString + ".hprof";
-            File outputFolder = new File(outputFolderString);
-            String heapdumpFile = new java.io.File(outputFolder,fileName).getAbsolutePath();
-            System.out.println("Creating Heapdump at: " + heapdumpFile);
-            getHotspotMBean().dumpHeap(heapdumpFile, true);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(createHeapdump) {
+            try {
+                String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+                String fileName = "heapdump_jmemb_" + dateString + ".hprof";
+                File outputFolder = new File(outputFolderString);
+                String heapdumpFile = new java.io.File(outputFolder, fileName).getAbsolutePath();
+                System.out.println("Creating Heapdump at: " + heapdumpFile);
+                getHotspotMBean().dumpHeap(heapdumpFile, true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No Heapdump was created. You might want to change the configuration to get a HeapDump.");
         }
     }
     
