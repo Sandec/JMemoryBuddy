@@ -1,3 +1,7 @@
+### 0.2.2
+ * If something get's collected but is marked with `assertNotCollectable`, then the original result of the toString method is used for the error output.
+ * Minor improvements/bugfixes to the error messages.
+
 ### 0.2.1
  * The following values are now also configurable: `-Djmemorybuddy.createHeapDump` and `-Djmemorybuddy.garbageAmount` 
 ### 0.2.0

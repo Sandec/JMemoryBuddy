@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class TestJMemoryBuddy {
 
@@ -66,12 +67,35 @@ public class TestJMemoryBuddy {
     public void negativeTest() {
         boolean exceptionThrown = false;
         try {
-            A referenced = new A();
+            String referenced = "someText";
             JMemoryBuddy.memoryTest(checker -> {
+                List<String> notReferenced = new java.util.LinkedList<>();
+                notReferenced.add("anotherText");
                 checker.assertCollectable(referenced);
+                checker.assertCollectable(notReferenced);
             });
         } catch (AssertionError e) {
             exceptionThrown = true;
+            Assert.assertTrue(e.getMessage().contains("someText"));
+            Assert.assertTrue(!e.getMessage().contains("anotherText"));
+            System.out.println(e.getMessage());
+        }
+        Assert.assertTrue("No exception was thrown!", exceptionThrown);
+    }
+
+    @Test
+    public void negativeTest2() {
+        boolean exceptionThrown = false;
+        try {
+            JMemoryBuddy.memoryTest(checker -> {
+                List<String> referenced = new java.util.LinkedList<>();
+                referenced.add("someText");
+                checker.assertNotCollectable(referenced);
+            });
+        } catch (AssertionError e) {
+            exceptionThrown = true;
+            System.out.println(e.getMessage());
+            Assert.assertTrue("Exception didn't contain toString method of the original object.", e.getMessage().contains("someText"));
         }
         Assert.assertTrue("No exception was thrown!", exceptionThrown);
     }

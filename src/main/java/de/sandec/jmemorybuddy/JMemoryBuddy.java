@@ -85,13 +85,14 @@ public class JMemoryBuddy {
         }
     }
     public static boolean checkNotCollectable(WeakReference weakReference) {
+        createGarbage();
         System.gc();
         return weakReference.get() != null;
     }
 
     public static void memoryTest(Consumer<MemoryTestAPI> f) {
         LinkedList<WeakReference> toBeCollected = new LinkedList<WeakReference>();
-        LinkedList<WeakReference> toBeNotCollected = new LinkedList<WeakReference>();
+        LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<AssertNotCollectable>();
         LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<SetAsReferenced>();
 
         f.accept(new MemoryTestAPI() {
@@ -101,7 +102,7 @@ public class JMemoryBuddy {
             }
             public void assertNotCollectable(Object ref) {
                 if(ref == null) throw new NullPointerException();
-                toBeNotCollected.add(new WeakReference<Object>(ref));
+                toBeNotCollected.add(new AssertNotCollectable(ref));
             }
             public void setAsReferenced(Object ref) {
                 if(ref == null) throw new NullPointerException();
@@ -118,8 +119,8 @@ public class JMemoryBuddy {
         if(stepsLeft == 0) {
             failed = true;
         }
-        for(WeakReference wRef: toBeNotCollected) {
-            if(!checkNotCollectable(wRef)) {
+        for(AssertNotCollectable wRef: toBeNotCollected) {
+            if(!checkNotCollectable(wRef.getWeakReference())) {
                 failed = true;
             };
         }
@@ -129,16 +130,20 @@ public class JMemoryBuddy {
             LinkedList<AssertNotCollectable> toBeNotCollectedMarked = new LinkedList<AssertNotCollectable>();
 
             for(WeakReference wRef: toBeCollected) {
-                toBeCollectedMarked.add(new AssertCollectable(wRef));
+                if(wRef.get() != null) {
+                    toBeCollectedMarked.add(new AssertCollectable(wRef));
+                }
             }
-            for(WeakReference wRef: toBeNotCollected) {
-                toBeNotCollectedMarked.add(new AssertNotCollectable(wRef));
+            for(AssertNotCollectable wRef: toBeNotCollected) {
+                if(wRef.getWeakReference().get() == null) {
+                    toBeNotCollectedMarked.add(wRef);
+                }
             }
             createHeapDump();
             if(toBeNotCollectedMarked.isEmpty()) {
                 throw new AssertionError("The following references should be collected: " + toBeCollectedMarked);
             } else {
-                throw new AssertionError("The following references should be collected: " + toBeCollectedMarked + " and " + toBeNotCollectedMarked.size() + " should not be collected: ");
+                throw new AssertionError("The following references should be collected: " + toBeCollectedMarked + " and " + toBeNotCollected.size() + " should not be collected: " + toBeNotCollectedMarked);
             }
         }
 
@@ -201,13 +206,20 @@ public class JMemoryBuddy {
 
     static class AssertNotCollectable {
         WeakReference<Object> assertNotCollectable;
+        String originalResultOfToString;
 
-        AssertNotCollectable(WeakReference<Object> ref) {
-            this.assertNotCollectable = ref;
+        AssertNotCollectable(Object ref) {
+            this.assertNotCollectable = new WeakReference<>(ref);
+            originalResultOfToString = ref.toString();
         }
 
         WeakReference<Object> getWeakReference() {
             return assertNotCollectable;
+        }
+
+        @Override
+        public String toString() {
+            return originalResultOfToString;
         }
     }
 
