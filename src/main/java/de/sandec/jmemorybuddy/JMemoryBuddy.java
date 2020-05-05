@@ -14,24 +14,23 @@ import java.util.function.Function;
 
 public class JMemoryBuddy {
 
-    static int steps = 10;
-    static int overallTime = 1000;
-    static int sleepTime = overallTime / steps;
-    static boolean createHeapdump = true;
-    static int garbageAmount = 999999;
+    private static int steps = 10;
+    private static int overallTime = 1000;
+    private static int sleepTime = overallTime / steps;
+    private static boolean createHeapdump = false;
+    private static int garbageAmount = 999999;
     private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
-
-    static String outputFolderString = ".";
+    private static String outputFolderString = ".";
 
     static {
         outputFolderString = System.getProperty("jmemorybuddy.output",".");
         overallTime = Integer.parseInt(System.getProperty("jmemorybuddy.checktime","1000"));
         steps = Integer.parseInt(System.getProperty("jmemorybuddy.steps", "10"));
-        createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "true"));
+        createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "false"));
         garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "10"));
     }
 
-    public static void createGarbage() {
+    private static void createGarbage() {
         LinkedList list = new LinkedList<Integer>();
         int counter = 0;
         while(counter < garbageAmount) {
@@ -40,6 +39,11 @@ public class JMemoryBuddy {
         }
     }
 
+    /**
+     * Checks whethr the content of the WeakReference can be collected.
+     * @param weakReference
+     * @return It throws an excpetion when the weakReference was not collectable.
+     */
     public static void assertCollectable(WeakReference weakReference) {
         if(!checkCollectable(weakReference)) {
             AssertCollectable assertCollectable = new AssertCollectable(weakReference);
@@ -48,6 +52,11 @@ public class JMemoryBuddy {
         }
     }
 
+    /**
+     * Checks whethr the content of the WeakReference can be collected.
+     * @param weakReference
+     * @return Returns true, when the provided WeakReference can be collected.
+     */
     public static boolean checkCollectable(WeakReference weakReference) {
         return checkCollectable(steps, weakReference) > 0;
     }
@@ -79,17 +88,33 @@ public class JMemoryBuddy {
         return counter;
     }
 
+    /**
+     * Checks whethr the content of the WeakReference can not be collected.
+     * @param weakReference
+     * @return It throws an excpetion when the weakReference was collectable.
+     */
     public static void assertNotCollectable(WeakReference weakReference) {
         if(!checkNotCollectable(weakReference)) {
             throw new AssertionError("Content of WeakReference was collected!");
         }
     }
+
+    /**
+     * Checks whethr the content of the WeakReference can not be collected.
+     * @param weakReference
+     * @return Returns true, when the provided WeakReference can be collected.
+     */
     public static boolean checkNotCollectable(WeakReference weakReference) {
         createGarbage();
         System.gc();
         return weakReference.get() != null;
     }
 
+    /**
+     * A standard method to define a test which checks code for specific memory semantic.
+     * The parameter of the lambda provides an API to define the required memory semantic.
+     * @param f
+     */
     public static void memoryTest(Consumer<MemoryTestAPI> f) {
         LinkedList<WeakReference> toBeCollected = new LinkedList<WeakReference>();
         LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<AssertNotCollectable>();
@@ -151,7 +176,7 @@ public class JMemoryBuddy {
     }
 
 
-    public static void createHeapDump() {
+    private static void createHeapDump() {
         if(createHeapdump) {
             try {
                 String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
@@ -167,9 +192,9 @@ public class JMemoryBuddy {
             System.out.println("No Heapdump was created. You might want to change the configuration to get a HeapDump.");
         }
     }
-    
+
     private static void setMxBeanProxyName(String mxBeanName) {
-        MX_BEAN_PROXY_TYPE = mxBeanName;   
+        MX_BEAN_PROXY_TYPE = mxBeanName;
     }
 
     private static HotSpotDiagnosticMXBean getHotspotMBean() throws IOException {
@@ -181,8 +206,21 @@ public class JMemoryBuddy {
     }
 
     public static interface MemoryTestAPI {
+        /**
+         * After executing the lambda, the provided ref must be collectable. Otherwise an Exception is thrown.
+         * @param ref
+         */
         public void assertCollectable(Object ref);
+        /**
+         * After executing the lambda, the provided ref must be not collectable. Otherwise an Exception is thrown.
+         * @param ref
+         */
         public void assertNotCollectable(Object ref);
+
+        /**
+         * The provided reference won't be collected, until memoryTest finishes all it's tests.
+         * @param ref
+         */
         public void setAsReferenced(Object ref);
     }
 
@@ -204,7 +242,7 @@ public class JMemoryBuddy {
         }
     }
 
-    static class AssertNotCollectable {
+    private static class AssertNotCollectable {
         WeakReference<Object> assertNotCollectable;
         String originalResultOfToString;
 
@@ -223,7 +261,7 @@ public class JMemoryBuddy {
         }
     }
 
-    static class SetAsReferenced {
+    private static class SetAsReferenced {
         Object setAsReferenced;
 
         SetAsReferenced(Object ref) {
