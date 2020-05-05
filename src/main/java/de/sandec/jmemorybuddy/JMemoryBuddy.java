@@ -17,7 +17,7 @@ public class JMemoryBuddy {
     private static int steps = 10;
     private static int overallTime = 1000;
     private static int sleepTime = overallTime / steps;
-    private static boolean createHeapdump = false;
+    private static boolean createHeapdump = true;
     private static int garbageAmount = 999999;
     private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
     private static String outputFolderString = ".";
@@ -26,7 +26,7 @@ public class JMemoryBuddy {
         outputFolderString = System.getProperty("jmemorybuddy.output",".");
         overallTime = Integer.parseInt(System.getProperty("jmemorybuddy.checktime","1000"));
         steps = Integer.parseInt(System.getProperty("jmemorybuddy.steps", "10"));
-        createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "false"));
+        createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "true"));
         garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "10"));
     }
 
