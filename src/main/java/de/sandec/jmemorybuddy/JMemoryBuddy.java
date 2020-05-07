@@ -33,7 +33,7 @@ public class JMemoryBuddy {
         garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "10"));
     }
 
-    private static void createGarbage() {
+    static void createGarbage() {
         LinkedList list = new LinkedList<Integer>();
         int counter = 0;
         while(counter < garbageAmount) {
@@ -177,7 +177,7 @@ public class JMemoryBuddy {
     }
 
 
-    private static void createHeapDump() {
+    static void createHeapDump() {
         if(createHeapdump) {
             try {
                 String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
