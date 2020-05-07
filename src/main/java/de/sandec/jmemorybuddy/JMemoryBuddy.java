@@ -12,6 +12,9 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Checkout <a href="https://github.com/Sandec/JMemoryBuddy">https://github.com/Sandec/JMemoryBuddy</a> for more documentation.
+ */
 public class JMemoryBuddy {
 
     private static int steps = 10;
@@ -40,9 +43,8 @@ public class JMemoryBuddy {
     }
 
     /**
-     * Checks whethr the content of the WeakReference can be collected.
-     * @param weakReference
-     * @return It throws an excpetion when the weakReference was not collectable.
+     * Checks whether the content of the WeakReference can be collected.
+     * @param weakReference The WeakReference to check.
      */
     public static void assertCollectable(WeakReference weakReference) {
         if(!checkCollectable(weakReference)) {
@@ -53,8 +55,8 @@ public class JMemoryBuddy {
     }
 
     /**
-     * Checks whethr the content of the WeakReference can be collected.
-     * @param weakReference
+     * Checks whether the content of the WeakReference can be collected.
+     * @param weakReference The WeakReference to check.
      * @return Returns true, when the provided WeakReference can be collected.
      */
     public static boolean checkCollectable(WeakReference weakReference) {
@@ -89,9 +91,8 @@ public class JMemoryBuddy {
     }
 
     /**
-     * Checks whethr the content of the WeakReference can not be collected.
-     * @param weakReference
-     * @return It throws an excpetion when the weakReference was collectable.
+     * Checks whether the content of the WeakReference can not be collected.
+     * @param weakReference The WeakReference to check.
      */
     public static void assertNotCollectable(WeakReference weakReference) {
         if(!checkNotCollectable(weakReference)) {
@@ -100,8 +101,8 @@ public class JMemoryBuddy {
     }
 
     /**
-     * Checks whethr the content of the WeakReference can not be collected.
-     * @param weakReference
+     * Checks whether the content of the WeakReference can not be collected.
+     * @param weakReference The WeakReference to check.
      * @return Returns true, when the provided WeakReference can be collected.
      */
     public static boolean checkNotCollectable(WeakReference weakReference) {
@@ -113,7 +114,7 @@ public class JMemoryBuddy {
     /**
      * A standard method to define a test which checks code for specific memory semantic.
      * The parameter of the lambda provides an API to define the required memory semantic.
-     * @param f
+     * @param f A function which get's executed with the API to define the required memory semantic.
      */
     public static void memoryTest(Consumer<MemoryTestAPI> f) {
         LinkedList<WeakReference> toBeCollected = new LinkedList<WeakReference>();
@@ -208,18 +209,18 @@ public class JMemoryBuddy {
     public static interface MemoryTestAPI {
         /**
          * After executing the lambda, the provided ref must be collectable. Otherwise an Exception is thrown.
-         * @param ref
+         * @param ref The reference which should be collectable.
          */
         public void assertCollectable(Object ref);
         /**
          * After executing the lambda, the provided ref must be not collectable. Otherwise an Exception is thrown.
-         * @param ref
+         * @param ref The reference which should not be collectable.
          */
         public void assertNotCollectable(Object ref);
 
         /**
-         * The provided reference won't be collected, until memoryTest finishes all it's tests.
-         * @param ref
+         * The provided reference will be reference hard, so it won't be collected, until memoryTest finishes.
+         * @param ref The reference which should get a hard reference for this test.
          */
         public void setAsReferenced(Object ref);
     }

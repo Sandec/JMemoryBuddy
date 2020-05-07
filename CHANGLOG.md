@@ -1,3 +1,6 @@
+### 0.2.4
+ * Updated JavaDoc.
+
 ### 0.2.3
  * Added JavaDoc.
  * Made various fields and methods private.

@@ -14,7 +14,7 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.2.2</version>
+  <version>0.2.4</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -22,7 +22,7 @@ The library is published at MavenCentral
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.2.2"
+    compile "de.sandec:JMemoryBuddy:0.2.4"
 }
 ```
 
