@@ -2,8 +2,8 @@
 [![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy)
 
 JMemoryBuddy provides an API to unit-test your code for memory leaks.
-It was used for internal project at Sandec, especially for [JPro](https://www.jpro.one/). 
-We've made it public, so everyone can fix and test their code for memoryleaks in a **proffesional** way.
+It is used for internal projects at Sandec, especially for [JPro](https://www.jpro.one/). 
+We've made it public, so everyone can fix and test their code for memory leaks in a **professional** way.
 
 **Together we can fix all memory leaks in the world. :-)** 
 
@@ -45,20 +45,20 @@ public void simpleTest() {
 }
 ```
 
-The lambda provided to the memoryTest method is executed only once. The provided argument named "checker" provides an API to declare how the memory semantic should be.
+The lambda provided to the memory test method is executed only once. The provided argument named "checker" provides an API to declare how the memory semantic should be.
 | Method        |            |
 | ------------- |:-------------:|
-| assertCollectable(ref)     | After executing the lambda, the provided ref must be collectable. Otherwise an Exception is thrown. |
-| assertNotCollectable(ref)     | After executing the lambda, the provided ref must be not collectable. Otherwise an Exception is thrown. |
+| assertCollectable(ref)     | After executing the lambda, the provided ref must be collectable. Otherwise, an exception is thrown. |
+| assertNotCollectable(ref)     | After executing the lambda, the provided ref must be not collectable. Otherwise, an exception is thrown. |
 | setAsReferenced(ref)     | The provided reference won't be collected, until memoryTest finishes all it's tests.|
 
-#### Other utlity methods:
+#### Other utility methods:
 
-You can also use the method `assertCollectable` and `assertNotCollectable` to check whether a single WeakReference can be collected, but usually the `memoryTest` method is prefered because it results in more elegant tests.
+You can also use the method `assertCollectable` and `assertNotCollectable` to check whether a single WeakReference can be collected, but usually, the `memoryTest` method is prefered because it results in more elegant tests.
 
 
-#### Analyzing the heapdump:
-JMemoryBuddy makes it easy to analyze the heapDump, because all problematic instances are wrapped inside a class with the name `AssertCollectable`. Just search your heapdump with your prefered tool for this classname:
+#### Analyzing the heap dump:
+JMemoryBuddy makes it easy to analyze the heap dump because all problematic instances are wrapped inside a class with the name `AssertCollectable`. Just search your heap dump with your prefered tool for this class name:
 ![visualvm](/screenshot-visualvm.png)
 
 
@@ -71,8 +71,8 @@ You can configure VisualVM with SystemProperties:
 
 | Tables        | Effect           | Default  |
 | ------------- |:-------------:| -----:|
-| -Djmemorybuddy.createHeapDump    | Should a heapdump created on failure? | true |
-| -Djmemorybuddy.output    | The folder were the heapdump get's saved. | "." |
+| -Djmemorybuddy.createHeapDump    | Should a heap dump created on failure? | true |
+| -Djmemorybuddy.output    | The folder where the heap dump gets saved. | "." |
 
 The following values usually shouldn't be changed but might be useful to make tests more stable or reduce the time required.
 | Tables        | Effect           | Default  |
@@ -87,7 +87,7 @@ The following values usually shouldn't be changed but might be useful to make te
 ## FAQ - Why is no one else writing unit-tests for memory leaks?
 
 There are various reasons for this. By spec the command `System.gc()` doesn't have to do anything, 
-This makes it hard and undeterministic to test for collectability. Nevertheless, **JMemoryBuddy makes testing for memory leaks reliable!**. Currently all known cases reliable and don't cause false negative test results.
+This makes it hard and undeterministic to test for collectability. Nevertheless, **JMemoryBuddy makes testing for memory leaks reliably!**. Currently, all known cases reliable and don't cause false-negative test results.
 
 
 ## Projects using JMemoryBuddy:
