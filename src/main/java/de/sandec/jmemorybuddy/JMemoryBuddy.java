@@ -17,20 +17,31 @@ import java.util.function.Function;
  */
 public class JMemoryBuddy {
 
-    private static int steps = 10;
-    private static int overallTime = 1000;
-    private static int sleepTime = overallTime / steps;
-    private static boolean createHeapdump = true;
+    private static int steps;
+    private static int overallTime;
+    private static int sleepTime;
+    private static boolean createHeapdump;
     private static int garbageAmount = 999999;
     private static String MX_BEAN_PROXY_TYPE = "com.sun.management:type=HotSpotDiagnostic";
     private static String outputFolderString = ".";
 
     static {
-        outputFolderString = System.getProperty("jmemorybuddy.output",".");
+        outputFolderString = System.getProperty("jmemorybuddy.output", getDefaultOutputFolder());
         overallTime = Integer.parseInt(System.getProperty("jmemorybuddy.checktime","1000"));
         steps = Integer.parseInt(System.getProperty("jmemorybuddy.steps", "10"));
         createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "true"));
-        garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "10"));
+        garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "99999"));
+
+        sleepTime = overallTime / steps;
+    }
+
+    private static String getDefaultOutputFolder() {
+        File folder1 = new File("target");
+        File folder2 = new File("build");
+
+        if(folder1.exists()) return folder1.getAbsolutePath();
+        if(folder2.exists()) return folder2.getAbsolutePath();
+        return ".";
     }
 
     static void createGarbage() {
