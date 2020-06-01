@@ -20,14 +20,22 @@ apply plugin: 'signing'
 
 group = 'de.sandec'
 archivesBaseName = "JMemoryBuddy"
-version = '0.2.4'
+version = '0.2.5-SNAPSHOT'
 
 sourceCompatibility = 8
 targetCompatibility = 8
 
-java {
-  withJavadocJar()
-  withSourcesJar()
+task javadocJar(type: Jar) {
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+artifacts {
+  archives javadocJar, sourcesJar
 }
 
 dependencies {
