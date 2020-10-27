@@ -119,6 +119,9 @@ public class JMemoryBuddy {
     public static boolean checkNotCollectable(WeakReference weakReference) {
         createGarbage();
         System.gc();
+        System.runFinalization();
+        createGarbage();
+        System.gc();
         return weakReference.get() != null;
     }
 
