@@ -1,3 +1,6 @@
+### 0.2.6
+ * Minor updates and refactoring.
+
 ### 0.2.5
  * The heap dumps are now saved by default in the directory `target` or `build` if they exist.
 

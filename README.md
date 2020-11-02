@@ -14,7 +14,7 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.2.5</version>
+  <version>0.2.56</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -22,7 +22,7 @@ The library is published at MavenCentral
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.2.5"
+    compile "de.sandec:JMemoryBuddy:0.2.6"
 }
 ```
 
@@ -72,13 +72,13 @@ You can configure VisualVM with SystemProperties:
 | Tables        | Effect           | Default  |
 | ------------- |:-------------:| -----:|
 | -Djmemorybuddy.createHeapDump    | Should a heap dump created on failure? | true |
-| -Djmemorybuddy.output    | The folder where the heap dump gets saved. | "." |
+| -Djmemorybuddy.output    | The folder where the heap dump gets saved. | if target exists, then "target" otherwise "build" |
 
 The following values usually shouldn't be changed but might be useful to make tests more stable or reduce the time required.
 | Tables        | Effect           | Default  |
 | ------------- |:-------------:| -----:|
 | -Djmemorybuddy.steps     | Maximum number of times we check whether something is collectable. You probably shouldn't change it. | 10 |
-| -Djmemorybuddy.checktime | Maximum time in ms used to check whether something is collectable. You probably shouldn't change it. | 1000 |
+| -Djmemorybuddy.testDuration | Maximum time in ms used to check whether something is collectable. You probably shouldn't change it. | 1000 |
 | -Djmemorybuddy.garbageAmount     | How much garbage is created to stimulate the garbage collector | 999999 |
 
 
