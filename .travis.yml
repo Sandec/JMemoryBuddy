@@ -4,6 +4,7 @@ jdk:
   - openjdk11
   - openjdk13
   - openjdk14
+  - openjdk15
 
 os:
   - linux
