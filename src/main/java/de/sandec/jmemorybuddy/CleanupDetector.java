@@ -27,7 +27,7 @@ public class CleanupDetector {
 
     private static PhantomReferenceWithRunnable pr = null;
     public static void onCleanup(Object obj, Runnable r) {
-        onCleanup(new PhantomReferenceWithRunnable(obj,queue,r));
+        onCleanup(new PhantomReferenceWithRunnable(obj,r));
     }
     public static void onCleanup(PhantomReferenceWithRunnable phantomref) {
         references.add(phantomref);
@@ -35,8 +35,8 @@ public class CleanupDetector {
 
     public static class PhantomReferenceWithRunnable extends PhantomReference {
         Runnable r = null;
-        PhantomReferenceWithRunnable(Object ref, ReferenceQueue queue, Runnable r) {
-            super(ref,queue);
+        PhantomReferenceWithRunnable(Object ref, Runnable r) {
+            super(ref, queue);
             this.r = r;
         }
     }
