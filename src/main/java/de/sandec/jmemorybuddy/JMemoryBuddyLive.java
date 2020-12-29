@@ -19,6 +19,7 @@ public class JMemoryBuddyLive {
 
         CollectableEntry entry = new CollectableEntry(new Date(), name);
         AssertCollectableLive pRef = new AssertCollectableLive(name, ref, () -> {
+            collectedEntrys += 1;
             collectables.remove(entry);
         });
         collectables.add(entry);
@@ -35,11 +36,6 @@ public class JMemoryBuddyLive {
                 collectedEntrys,
                 collectables.stream().sorted((a, b) -> a.collectableSince.compareTo(b.collectableSince))
                         .collect(Collectors.toList()));
-    }
-
-    synchronized static private void unmarkCollectable(CollectableEntry entry) {
-        collectables.remove(entry);
-        collectedEntrys += 1;
     }
 
     public static class CollectableEntry {
@@ -68,8 +64,8 @@ public class JMemoryBuddyLive {
     }
 
     public static class Report {
-        int collectedEntries;
-        List<CollectableEntry> uncollectedEntries;
+        public int collectedEntries;
+        public List<CollectableEntry> uncollectedEntries;
         Report(int collectedEntries, List<CollectableEntry> uncollectedEntries) {
             this.collectedEntries = collectedEntries;
             this.uncollectedEntries = uncollectedEntries;
@@ -78,8 +74,8 @@ public class JMemoryBuddyLive {
         @Override
         public String toString() {
             return "Report{" +
-                    "collectedEntries=" + collectedEntries +
-                    ", uncollectedEntries=" + uncollectedEntries +
+                    "collectedEntries=" + this.collectedEntries +
+                    ", uncollectedEntries=" + this.uncollectedEntries +
                     '}';
         }
     }
