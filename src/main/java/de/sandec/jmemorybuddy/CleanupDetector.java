@@ -25,14 +25,23 @@ public class CleanupDetector {
         cleanupDetectorThread.start();
     }
 
-    private static PhantomReferenceWithRunnable pr = null;
+    /**
+     * The runnable gets executed after the object has been collected by the GC.
+     */
     public static void onCleanup(Object obj, Runnable r) {
         onCleanup(new PhantomReferenceWithRunnable(obj,r));
     }
+    /**
+     * This version of the method can be used to provide more information 
+     * in the heap dump by extending PhantomReferenceWithRunnable.
+     */
     public static void onCleanup(PhantomReferenceWithRunnable phantomref) {
         references.add(phantomref);
     }
 
+    /**
+     * This class can be extended to provide more meta information to the method onCleanup.
+     */
     public static class PhantomReferenceWithRunnable extends PhantomReference {
         Runnable r = null;
         PhantomReferenceWithRunnable(Object ref, Runnable r) {

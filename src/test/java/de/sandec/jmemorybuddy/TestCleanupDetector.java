@@ -19,4 +19,15 @@ public class TestCleanupDetector {
         });
         latch.await(1, TimeUnit.SECONDS);
     }
+
+    @Test
+    public void isPhantomRefCollectable() throws Exception {
+        JMemoryBuddy.memoryTest(checker -> {
+            CleanupDetector.PhantomReferenceWithRunnable pRef = new CleanupDetector.PhantomReferenceWithRunnable(new Object(), () -> {});
+            CleanupDetector.onCleanup(pRef);
+
+            checker.assertCollectable(pRef);
+        });
+        latch.await(1, TimeUnit.SECONDS);
+    }
 }
