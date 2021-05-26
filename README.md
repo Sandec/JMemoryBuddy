@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy)
 
 JMemoryBuddy provides an API to unit-test your code for memory leaks.
+It also provides an API to monitor a running JVM for memory leaks.
 It is used for internal projects at Sandec, especially for [JPro](https://www.jpro.one/). 
 We've made it public, so everyone can fix and test their code for memory leaks in a **professional** way.
 
@@ -28,7 +29,7 @@ dependencies {
 
 ## How to use:
 
-#### MemoryTest:
+#### Write unit tests for memory leaks!
 
 The method `JMemoryBuddy.memoryTest` is the usual way to test for leaks with JMemoryBuddy.
 A typicial test might look like the following:
@@ -82,6 +83,20 @@ The following values usually shouldn't be changed but might be useful to make te
 | -Djmemorybuddy.garbageAmount     | How much garbage is created to stimulate the garbage collector | 999999 |
 
 
+
+## Monitor running systems:
+Mark references, where you know they can be collected:
+```
+JMemoryBuddyLive.markCollectable("description",reference);
+```
+Afterwards you can create a report during runtime with details about leaks.
+```
+System.gc();
+JMemoryBuddyLive.getReport();
+```
+or search for AssertCollectableLive in a HeapDump.
+If the referent of an AssertCollectableLive is reachable, then you have a memory leak.
+It's especially interesting to see which leaks happen, if an application runs for severy hours, days, weeks or months. 
 
     
 ## FAQ - Why is no one else writing unit-tests for memory leaks?
