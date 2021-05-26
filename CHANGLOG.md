@@ -1,3 +1,10 @@
+### 0.5.1
+ * Replace the PhantomReference in JMemoryBuddyLife with a WeakReference, 
+   because it wasn't necessary.
+
+### 0.5.0
+ * Added JMemoryBuddyLife, to monitor a running JVM for memory leaks.
+
 ### 0.2.6
  * Minor updates and refactoring.
 

@@ -23,7 +23,7 @@ public class TestCleanupDetector {
     @Test
     public void isPhantomRefCollectable() throws Exception {
         JMemoryBuddy.memoryTest(checker -> {
-            CleanupDetector.PhantomReferenceWithRunnable pRef = new CleanupDetector.PhantomReferenceWithRunnable(new Object(), () -> {});
+            CleanupDetector.WeakReferenceWithRunnable pRef = new CleanupDetector.WeakReferenceWithRunnable(new Object(), () -> {});
             CleanupDetector.onCleanup(pRef);
 
             checker.assertCollectable(pRef);

@@ -55,7 +55,7 @@ public class JMemoryBuddyLive {
         }
     }
 
-    static class AssertCollectableLive extends CleanupDetector.PhantomReferenceWithRunnable {
+    static class AssertCollectableLive extends CleanupDetector.WeakReferenceWithRunnable {
         String name;
         AssertCollectableLive(String name, Object ref, Runnable r) {
             super(ref, r);

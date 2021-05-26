@@ -2,9 +2,6 @@ buildscript {
   repositories {
     jcenter()
   }
-  dependencies {
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
-  }
 }
 
 repositories {
@@ -12,7 +9,6 @@ repositories {
 }
 
 apply plugin: 'java'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 apply plugin: 'maven'
 apply plugin: 'signing'
@@ -116,21 +112,5 @@ if (project.hasProperty('ossrhUsername')) {
         }
       }
     }
-  }
-}
-
-
-bintray {
-  if(project.hasProperty("BINTRAY_USER")) {
-    user = BINTRAY_USER
-    key  = BINTRAY_KEY
-  }
-  publications = ['mavenJava']
-  publish = true
-  override = true
-  pkg {
-    repo = 'repo'
-    name = project.name
-    userOrg = 'sandec'
   }
 }
