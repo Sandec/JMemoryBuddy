@@ -107,14 +107,12 @@ This makes it hard and undeterministic to test for collectability. Nevertheless,
 ## Real test samples:
 * [controlsfx](https://github.com/controlsfx/controlsfx/blob/master/controlsfx/src/test/java/org/controlsfx/control/action/TestActionUtils.java) - A simple test for a isolated JavaFX Components.
 * CSSFX ([1](https://github.com/McFoggy/cssfx/blob/master/src/test/java/fr/brouillard/oss/cssfx/test/TestMemoryLeaks.java), [2](https://github.com/McFoggy/cssfx/blob/master/src/test/java/fr/brouillard/oss/cssfx/test/TestURIRegistrar.java)) - Various tests to make sure that a listener based code base doesn't have unwanted changes to the memory semantics.
-* [SpaceFX](https://github.com/HanSolo/SpaceFX/blob/master/src/test/java/eu/hansolo/spacefx/TestSpaceFXView.java) - A more complex test to check whether the whole application leaks.
 * [JavaFX](https://github.com/openjdk/jfx/pull/204) - PR for JavaFX itself to simplify some of the existing tests for memory leaks.
 
 ## Projects using JMemoryBuddy:
 * [jpro.one](https://jpro.one/) - aka JavaFX for the web
 * [controlsfx](https://github.com/controlsfx/controlsfx) - A very often used Library for JavaFX
 * [CSSFX](https://github.com/McFoggy/cssfx) - Every JavaFX Developer should use this library
-* [SpaceFX](https://github.com/HanSolo/SpaceFX) - Every JavaFX Developer should use this library ???
 * [Your project?](https://github.com/Sandec/JMemoryBuddy/pulls)
 
 ##### internal developer
