@@ -104,8 +104,13 @@ It's especially interesting to see which leaks happen, if an application runs fo
 There are various reasons for this. By spec the command `System.gc()` doesn't have to do anything, 
 This makes it hard and undeterministic to test for collectability. Nevertheless, **JMemoryBuddy makes testing for memory leaks reliably!**. Currently, all known cases reliable and don't cause false-negative test results.
 
-> What can i do about SoftReferences? It's hard to check whether they are strongly reachable.
+* What can i do about SoftReferences? It's hard to check whether they are strongly reachable.
+
 You can use the following JVM arugment: `-XX:SoftRefLRUPolicyMSPerMB=0`. With this argument, SoftReferences behave like WeakReferences.
+
+* I'm getting Leaking references during development, but not during production. What could be the reason?
+
+A common reason might be various debuging features of you IDE. If you use the debugger, the garbage collector doesn't work reliably anymore.
 
 ## Real test samples:
 * [controlsfx](https://github.com/controlsfx/controlsfx/blob/master/controlsfx/src/test/java/org/controlsfx/control/action/TestActionUtils.java) - A simple test for a isolated JavaFX Components.
