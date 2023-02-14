@@ -19,11 +19,15 @@ public class JMemoryBuddyLive {
 
         CollectableEntry entry = new CollectableEntry(new Date(), name);
         AssertCollectableLive pRef = new AssertCollectableLive(name, ref, () -> {
-            collectedEntrys += 1;
-            collectables.remove(entry);
+            removeCollectable(entry);
         });
         collectables.add(entry);
         CleanupDetector.onCleanup(pRef);
+    }
+
+    private synchronized static void removeCollectable(CollectableEntry entry) {
+        collectedEntrys += 1;
+        collectables.remove(entry);
     }
 
     /**

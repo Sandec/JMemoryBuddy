@@ -1,3 +1,7 @@
+### 0.5.2
+ * Fixed ConcurrentModificationException in JMemoryBuddyLife.
+ * Upated the Gradle Build and how the publishing works.
+
 ### 0.5.1
  * Replace the PhantomReference in JMemoryBuddyLife with a WeakReference, 
    because it wasn't necessary.

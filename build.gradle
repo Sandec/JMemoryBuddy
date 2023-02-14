@@ -10,34 +10,26 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-apply plugin: 'maven'
 apply plugin: 'signing'
 
 
 group = 'de.sandec'
 archivesBaseName = "JMemoryBuddy"
-version = '0.5.1'
+version = '0.5.2-SNAPSHOT'
 
 sourceCompatibility = 8
 targetCompatibility = 8
 
-task javadocJar(type: Jar) {
-  classifier = 'javadoc'
-  from javadoc
-}
-
-task sourcesJar(type: Jar) {
-  classifier = 'sources'
-  from sourceSets.main.allSource
-}
-artifacts {
-  archives javadocJar, sourcesJar
+java {
+  withSourcesJar()
+  withJavadocJar()
 }
 
 dependencies {
   testImplementation 'junit:junit:4.13.1'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
-  testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+  implementation 'org.openjdk.jol:jol-core:0.16'
 }
 
 test {
@@ -54,6 +46,35 @@ publishing {
       groupId project.group
       artifactId "JMemoryBuddy"
       version project.version
+
+
+      pom {
+        packaging = 'jar'
+        // optionally artifactId can be defined here
+        description = 'A library usefull for unit testing memory leaks'
+        url = 'https://github.com/Sandec/jmemorybuddy'
+
+        scm {
+          connection = 'https://github.com/Sandec/JMemoryBuddy.git'
+          developerConnection = 'https://github.com/Sandec/JMemoryBuddy.git'
+          url = 'https://github.com/Sandec/JMemoryBuddy.git'
+        }
+
+        licenses {
+          license {
+            name = 'The Apache License, Version 2.0'
+            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id = 'floriankirmaier'
+            name = 'Florian Kirmaier'
+            email = 'florian.kirmaier@gmail.com'
+          }
+        }
+      }
     }
   }
 }
@@ -65,52 +86,26 @@ jar {
 }
 
 if (project.hasProperty('ossrhUsername')) {
-    signing {
-        sign configurations.archives
-    }
+  signing {
+    //def signingKey = findProperty("signing.secretKeyRingFile")
+    //def signingPassword = findProperty("signing.password")
+    //useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+  }
 
-  uploadArchives {
+  publishing {
     repositories {
-      mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-          authentication(userName: ossrhUsername, password: ossrhPassword)
-        }
-
-        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-          authentication(userName: ossrhUsername, password: ossrhPassword)
-        }
-
-        pom.project {
-          name 'JMemoryBuddy'
-          packaging 'jar'
-          // optionally artifactId can be defined here
-          description 'A library usefull for unit testing memory leaks'
-          url 'https://github.com/Sandec/jmemorybuddy'
-
-          scm {
-            connection 'https://github.com/Sandec/JMemoryBuddy.git'
-            developerConnection 'https://github.com/Sandec/JMemoryBuddy.git'
-            url 'https://github.com/Sandec/JMemoryBuddy.git'
-          }
-
-          licenses {
-            license {
-              name 'The Apache License, Version 2.0'
-              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            }
-          }
-
-          developers {
-            developer {
-              id 'floriankirmaier'
-              name 'Florian Kirmaier'
-              email 'florian.kirmaier@gmail.com'
-            }
-          }
+      maven {
+        name = "artifactory"
+        url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        // SNAPSHOTS
+        //url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        credentials {
+          username ossrhUsername
+          password ossrhPassword
         }
       }
     }
   }
+
 }
