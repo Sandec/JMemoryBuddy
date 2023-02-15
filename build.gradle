@@ -50,6 +50,7 @@ publishing {
 
       pom {
         packaging = 'jar'
+        name = 'JMemoryBuddy'
         // optionally artifactId can be defined here
         description = 'A library usefull for unit testing memory leaks'
         url = 'https://github.com/Sandec/jmemorybuddy'
