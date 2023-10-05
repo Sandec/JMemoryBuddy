@@ -131,5 +131,5 @@ publish local:
 
 publish to sonatype:
 ```
-./gradlew uploadArchives
+./gradlew closeAndReleaseSonatypeStagingRepository
 ```

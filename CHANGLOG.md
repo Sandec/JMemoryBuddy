@@ -1,3 +1,6 @@
+### 0.5.3
+* Updated build
+
 ### 0.5.2
  * Fixed ConcurrentModificationException in JMemoryBuddyLife.
  * Upated the Gradle Build and how the publishing works.

@@ -1,11 +1,16 @@
 buildscript {
   repositories {
-    jcenter()
+    mavenCentral()
   }
+
+}
+
+plugins {
+  id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
 }
 
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 apply plugin: 'java'
@@ -15,7 +20,7 @@ apply plugin: 'signing'
 
 group = 'de.sandec'
 archivesBaseName = "JMemoryBuddy"
-version = '0.5.2'
+version = '0.5.3'
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -94,18 +99,26 @@ if (project.hasProperty('ossrhUsername')) {
     sign publishing.publications.mavenJava
   }
 
-  publishing {
+
+  nexusPublishing {
+    //packageGroup = "com.example.mycompany.myproject"  //defaults to 'project.group'
+
     repositories {
-      maven {
-        name = "artifactory"
-        url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-        // SNAPSHOTS
-        //url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        credentials {
-          username ossrhUsername
-          password ossrhPassword
-        }
+      sonatype {   //or custom repository name
+        //stagingProfileId = "yourStagingProfileId" //can reduce execution time by even 10 seconds
+
+        //defaults to project properties 'sonatypeUsername' and 'sonatypePassword', where 'sonatype' is name of configured repository
+        username = ossrhUsername
+        password = ossrhPassword
       }
+    }
+
+    clientTimeout = Duration.ofSeconds(300)
+    connectTimeout = Duration.ofSeconds(60)
+
+    transitionCheckOptions {
+      maxRetries.set(40)
+      delayBetween.set(java.time.Duration.ofMillis(3000))
     }
   }
 
