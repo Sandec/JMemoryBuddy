@@ -1,3 +1,9 @@
+### 0.5.4
+* Slightly improved error messages
+* Updated CI to use also use Java17 and Java21
+* Updated to JUnit 5
+* Removed accidentally committed jol dependency.
+
 ### 0.5.3
 * Updated build
 
