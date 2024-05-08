@@ -20,7 +20,7 @@ apply plugin: 'signing'
 
 group = 'de.sandec'
 archivesBaseName = "JMemoryBuddy"
-version = '0.5.3'
+version = '0.5.4-SNAPSHOT'
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -121,5 +121,4 @@ if (project.hasProperty('ossrhUsername')) {
       delayBetween.set(java.time.Duration.ofMillis(3000))
     }
   }
-
 }
