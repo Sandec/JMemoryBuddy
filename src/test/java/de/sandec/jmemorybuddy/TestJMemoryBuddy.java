@@ -3,6 +3,7 @@ package de.sandec.jmemorybuddy;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -118,6 +119,35 @@ public class TestJMemoryBuddy {
             checker.assertCollectable(o);
         });
     }
+
+    @Test
+    public void testErrorMessages1() {
+        Throwable e = Assertions.assertThrows(AssertionError.class, () -> {
+            JMemoryBuddy.memoryTest(checker -> {
+                Object a = new Object();
+                checker.assertNotCollectable(a);
+            });
+        });
+        Assertions.assertTrue(e.getMessage().toLowerCase().contains("should not be collected"),
+                "Error message should contain 'should not be collectable', but was: " + e.getMessage());
+        Assertions.assertFalse(e.getMessage().toLowerCase().contains("should be collected"),
+                "Error message should not contain 'should be collectable', but was: " + e.getMessage());
+    }
+
+    @Test
+    public void testErrorMessages2() {
+        Throwable e = Assertions.assertThrows(AssertionError.class, () -> {
+            Object a = new Object();
+            JMemoryBuddy.memoryTest(checker -> {
+                checker.assertCollectable(a);
+            });
+        });
+        Assertions.assertTrue(e.getMessage().toLowerCase().contains("should be collected"),
+                "Error message should contain 'should be collectable', but was: " + e.getMessage());
+        Assertions.assertFalse(e.getMessage().toLowerCase().contains("should not be collected"),
+                "Error message should not contain 'should not be collectable', but was: " + e.getMessage());
+    }
+
 
     /* This basically demonstrates why finalize is deprecated. It's not a real test. */
     public void setReferenceOnFinalization() {

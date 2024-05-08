@@ -188,6 +188,8 @@ public class JMemoryBuddy {
             createHeapDump();
             if (toBeNotCollectedMarked.isEmpty()) {
                 throw new AssertionError("The following references should be collected: " + toBeCollectedMarked);
+            } else if(toBeCollectedMarked.isEmpty()) {
+                throw new AssertionError("The following references should not be collected: " + toBeNotCollectedMarked);
             } else {
                 throw new AssertionError("The following references should be collected: " + toBeCollectedMarked + " and " + toBeNotCollected.size() + " should not be collected: " + toBeNotCollectedMarked);
             }
