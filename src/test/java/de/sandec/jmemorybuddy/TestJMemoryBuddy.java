@@ -1,8 +1,7 @@
 package de.sandec.jmemorybuddy;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.ref.WeakReference;
@@ -77,11 +76,11 @@ public class TestJMemoryBuddy {
             });
         } catch (AssertionError e) {
             exceptionThrown = true;
-            Assert.assertTrue(e.getMessage().contains("someText"));
-            Assert.assertTrue(!e.getMessage().contains("anotherText"));
+            Assertions.assertTrue(e.getMessage().contains("someText"));
+            Assertions.assertTrue(!e.getMessage().contains("anotherText"));
             System.out.println(e.getMessage());
         }
-        Assert.assertTrue("No exception was thrown!", exceptionThrown);
+        Assertions.assertTrue(exceptionThrown, "No exception was thrown!");
     }
 
     @Test
@@ -96,9 +95,9 @@ public class TestJMemoryBuddy {
         } catch (AssertionError e) {
             exceptionThrown = true;
             System.out.println(e.getMessage());
-            Assert.assertTrue("Exception didn't contain toString method of the original object.", e.getMessage().contains("someText"));
+            Assertions.assertTrue(e.getMessage().contains("someText"), "Exception didn't contain toString method of the original object.");
         }
-        Assert.assertTrue("No exception was thrown!", exceptionThrown);
+        Assertions.assertTrue(exceptionThrown, "No exception was thrown!");
     }
 
     @Test

@@ -1,7 +1,7 @@
 package de.sandec.jmemorybuddy;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import de.sandec.jmemorybuddy.JMemoryBuddy;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +18,6 @@ public class TestJMemoryBuddyLive {
         });
         Thread.sleep(50); // we might have a slight delay,
                                    // because processing the collection might happen slightly delayed.
-        Assert.assertEquals(initialCollected + 1, JMemoryBuddyLive.getReport().collectedEntries);
+        Assertions.assertEquals(initialCollected + 1, JMemoryBuddyLive.getReport().collectedEntries);
     }
 }

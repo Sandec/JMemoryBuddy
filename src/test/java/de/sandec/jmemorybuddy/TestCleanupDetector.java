@@ -1,7 +1,7 @@
 package de.sandec.jmemorybuddy;
 
-import org.junit.Test;
 import de.sandec.jmemorybuddy.JMemoryBuddy;
+import org.junit.jupiter.api.Test;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
