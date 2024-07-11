@@ -7,14 +7,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CleanupDetector {
 
-    private static final Set<WeakReferenceWithRunnable> references = ConcurrentHashMap.newKeySet();
+    private static final Set<WeakReferenceWithRunnable<?>> references = ConcurrentHashMap.newKeySet();
     private static final ReferenceQueue<Object> queue = new ReferenceQueue<>();
 
     static {
         Thread cleanupDetectorThread = new Thread(() -> {
             while (true) {
                 try {
-                    WeakReferenceWithRunnable r = (WeakReferenceWithRunnable) queue.remove();
+                    WeakReferenceWithRunnable<?> r = (WeakReferenceWithRunnable<?>) queue.remove();
                     references.remove(r);
                     r.r.run();
                 } catch (Throwable e) {
