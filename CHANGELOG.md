@@ -1,4 +1,6 @@
-### 0.5.5
+### 0.5.6 (TBD)
+
+### 0.5.5 (July 11, 2024)
 * Modularize `JMemoryBuddy` artifact to be in compliance with the Java Platform Module System.
 * Set minimum Java version to 11
 * Enable JUnit 5 tests running in the CI builds
