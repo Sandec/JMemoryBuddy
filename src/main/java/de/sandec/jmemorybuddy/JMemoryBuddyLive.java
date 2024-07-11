@@ -37,7 +37,7 @@ public class JMemoryBuddyLive {
     synchronized static public Report getReport() {
         return new Report(
                 collectedEntries,
-                collectables.stream().sorted((a, b) -> a.collectableSince.compareTo(b.collectableSince))
+                collectables.stream().sorted(Comparator.comparing(a -> a.collectableSince))
                         .collect(Collectors.toList()));
     }
 
