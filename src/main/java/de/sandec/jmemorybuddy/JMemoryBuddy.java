@@ -135,21 +135,21 @@ public class JMemoryBuddy {
      * The parameter of the lambda provides an API to define the required memory semantic.
      * @param f A function which get's executed with the API to define the required memory semantic.
      */
-    public static <T> void memoryTest(Consumer<MemoryTestAPI<T>> f) {
-        LinkedList<WeakReference<T>> toBeCollected = new LinkedList<>();
-        LinkedList<AssertNotCollectable<T>> toBeNotCollected = new LinkedList<>();
-        LinkedList<SetAsReferenced<T>> toBeReferenced = new LinkedList<>();
+    public static void memoryTest(Consumer<MemoryTestAPI> f) {
+        LinkedList<WeakReference<Object>> toBeCollected = new LinkedList<>();
+        LinkedList<AssertNotCollectable<Object>> toBeNotCollected = new LinkedList<>();
+        LinkedList<SetAsReferenced<Object>> toBeReferenced = new LinkedList<>();
 
-        f.accept(new MemoryTestAPI<>() {
-            public void assertCollectable(T ref) {
+        f.accept(new MemoryTestAPI() {
+            public void assertCollectable(Object ref) {
                 Objects.requireNonNull(ref);
                 toBeCollected.add(new WeakReference<>(ref));
             }
-            public void assertNotCollectable(T ref) {
+            public void assertNotCollectable(Object ref) {
                 Objects.requireNonNull(ref);
                 toBeNotCollected.add(new AssertNotCollectable<>(ref));
             }
-            public void setAsReferenced(T ref) {
+            public void setAsReferenced(Object ref) {
                 Objects.requireNonNull(ref);
                 toBeReferenced.add(new SetAsReferenced<>(ref));
             }
@@ -158,28 +158,28 @@ public class JMemoryBuddy {
         int stepsLeft = steps;
         boolean failed = false;
 
-        for (WeakReference<T> wRef: toBeCollected) {
+        for (WeakReference<Object> wRef: toBeCollected) {
             stepsLeft = checkCollectable(stepsLeft, wRef);
         }
         if (stepsLeft == 0) {
             failed = true;
         }
-        for (AssertNotCollectable<T> wRef: toBeNotCollected) {
+        for (AssertNotCollectable<Object> wRef: toBeNotCollected) {
             if (!checkNotCollectable(wRef.getWeakReference())) {
                 failed = true;
             };
         }
 
         if (failed) {
-            LinkedList<AssertCollectable<T>> toBeCollectedMarked = new LinkedList<>();
-            LinkedList<AssertNotCollectable<T>> toBeNotCollectedMarked = new LinkedList<>();
+            LinkedList<AssertCollectable<Object>> toBeCollectedMarked = new LinkedList<>();
+            LinkedList<AssertNotCollectable<Object>> toBeNotCollectedMarked = new LinkedList<>();
 
-            for (WeakReference<T> wRef: toBeCollected) {
+            for (WeakReference<Object> wRef: toBeCollected) {
                 if (wRef.get() != null) {
                     toBeCollectedMarked.add(new AssertCollectable<>(wRef));
                 }
             }
-            for (AssertNotCollectable<T> wRef: toBeNotCollected) {
+            for (AssertNotCollectable<Object> wRef: toBeNotCollected) {
                 if (wRef.getWeakReference().get() == null) {
                     toBeNotCollectedMarked.add(wRef);
                 }
@@ -226,25 +226,25 @@ public class JMemoryBuddy {
      * This class provides different methods, which can be used to declare memory-constraints.
      * You can get an instance through the lambda of the method JMemoryBuddy.memoryTest.
      */
-    public interface MemoryTestAPI<T> {
+    public interface MemoryTestAPI {
 
         /**
          * After executing the lambda, the provided ref must be collectable. Otherwise, an Exception is thrown.
          * @param ref The reference which should be collectable.
          */
-        void assertCollectable(T ref);
+        void assertCollectable(Object ref);
 
         /**
          * After executing the lambda, the provided ref must be not collectable. Otherwise, an Exception is thrown.
          * @param ref The reference which should not be collectable.
          */
-        void assertNotCollectable(T ref);
+        void assertNotCollectable(Object ref);
 
         /**
          * The provided reference will be reference hard, so it won't be collected, until memoryTest finishes.
          * @param ref The reference which should get a hard reference for this test.
          */
-        void setAsReferenced(T ref);
+        void setAsReferenced(Object ref);
     }
 
     static class AssertCollectable<T> {
