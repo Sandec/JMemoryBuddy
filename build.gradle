@@ -24,9 +24,6 @@ version = "$JMEMORYBUDDY_VERSION"
 java {
   sourceCompatibility = 11
   targetCompatibility = 11
-
-  withSourcesJar()
-  withJavadocJar()
 }
 
 dependencies {
@@ -50,7 +47,6 @@ test {
   }
 }
 
-
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -58,7 +54,6 @@ publishing {
       groupId project.group
       artifactId "JMemoryBuddy"
       version project.version
-
 
       pom {
         packaging = 'jar'
@@ -90,11 +85,21 @@ publishing {
       }
     }
   }
-}
 
-jar {
-  manifest {
-    attributes  'Automatic-Module-Name': "de.sandec.jmemorybuddy"
+  java {
+    withSourcesJar()
+    withJavadocJar()
+  }
+
+  repositories {
+    maven {
+      name = "artifactory"
+      url = "https://sandec.jfrog.io/artifactory/repo"
+      credentials {
+        username System.getenv("SANDEC_ARTIFACTORY_USERNAME")
+        password System.getenv("SANDEC_ARTIFACTORY_PASSWORD")
+      }
+    }
   }
 }
 
