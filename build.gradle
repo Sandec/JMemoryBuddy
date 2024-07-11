@@ -30,8 +30,6 @@ java {
 }
 
 dependencies {
-//  implementation 'org.openjdk.jol:jol-core:0.17'
-
   testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
   testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
   testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
