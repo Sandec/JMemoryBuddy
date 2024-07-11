@@ -17,9 +17,7 @@ public class JMemoryBuddyLive {
         Objects.requireNonNull(ref);
 
         CollectableEntry entry = new CollectableEntry(new Date(), name);
-        AssertCollectableLive<T> pRef = new AssertCollectableLive<>(name, ref, () -> {
-            removeCollectable(entry);
-        });
+        AssertCollectableLive<T> pRef = new AssertCollectableLive<>(name, ref, () -> removeCollectable(entry));
         collectables.add(entry);
         CleanupDetector.onCleanup(pRef);
     }

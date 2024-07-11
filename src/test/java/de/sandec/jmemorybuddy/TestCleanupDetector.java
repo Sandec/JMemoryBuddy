@@ -11,7 +11,7 @@ public class TestCleanupDetector {
     Runnable r = () -> latch.countDown();
 
     @Test
-    public void isRunnableCalled() throws Exception{
+    public void isRunnableCalled() throws Exception {
         JMemoryBuddy.memoryTest(checker -> {
             Object o = new Object();
             CleanupDetector.onCleanup(o, r);
@@ -24,9 +24,9 @@ public class TestCleanupDetector {
     public void isPhantomRefCollectable() throws Exception {
         JMemoryBuddy.memoryTest(checker -> {
             CleanupDetector.WeakReferenceWithRunnable<Object> pRef =
-                    new CleanupDetector.WeakReferenceWithRunnable<>(new Object(), () -> {});
+                    new CleanupDetector.WeakReferenceWithRunnable<>(new Object(), () -> {
+                    });
             CleanupDetector.onCleanup(pRef);
-
             checker.assertCollectable(pRef);
         });
         latch.await(1, TimeUnit.SECONDS);

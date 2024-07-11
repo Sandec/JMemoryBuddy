@@ -227,13 +227,15 @@ public class JMemoryBuddy {
      * You can get an instance through the lambda of the method JMemoryBuddy.memoryTest.
      */
     public interface MemoryTestAPI<T> {
+
         /**
-         * After executing the lambda, the provided ref must be collectable. Otherwise an Exception is thrown.
+         * After executing the lambda, the provided ref must be collectable. Otherwise, an Exception is thrown.
          * @param ref The reference which should be collectable.
          */
         void assertCollectable(T ref);
+
         /**
-         * After executing the lambda, the provided ref must be not collectable. Otherwise an Exception is thrown.
+         * After executing the lambda, the provided ref must be not collectable. Otherwise, an Exception is thrown.
          * @param ref The reference which should not be collectable.
          */
         void assertNotCollectable(T ref);
