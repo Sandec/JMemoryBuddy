@@ -21,10 +21,10 @@ group = 'de.sandec'
 archivesBaseName = "$ARCHIVE_BASE_NAME"
 version = "$JMEMORYBUDDY_VERSION"
 
-sourceCompatibility = 11
-targetCompatibility = 11
-
 java {
+  sourceCompatibility = 11
+  targetCompatibility = 11
+
   withSourcesJar()
   withJavadocJar()
 }
