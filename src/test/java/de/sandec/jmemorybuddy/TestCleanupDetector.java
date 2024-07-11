@@ -1,7 +1,7 @@
 package de.sandec.jmemorybuddy;
 
-import de.sandec.jmemorybuddy.JMemoryBuddy;
 import org.junit.jupiter.api.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +23,8 @@ public class TestCleanupDetector {
     @Test
     public void isPhantomRefCollectable() throws Exception {
         JMemoryBuddy.memoryTest(checker -> {
-            CleanupDetector.WeakReferenceWithRunnable pRef = new CleanupDetector.WeakReferenceWithRunnable(new Object(), () -> {});
+            CleanupDetector.WeakReferenceWithRunnable<Object> pRef =
+                    new CleanupDetector.WeakReferenceWithRunnable<>(new Object(), () -> {});
             CleanupDetector.onCleanup(pRef);
 
             checker.assertCollectable(pRef);

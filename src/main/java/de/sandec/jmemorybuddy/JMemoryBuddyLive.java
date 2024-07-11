@@ -1,12 +1,11 @@
 package de.sandec.jmemorybuddy;
 
-import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class JMemoryBuddyLive {
 
-    static int collectedEntrys = 0;
+    static int collectedEntries = 0;
     static Set<CollectableEntry> collectables = new HashSet<>();
 
     /**
@@ -14,11 +13,11 @@ public class JMemoryBuddyLive {
      * it can be found by searching for the class AssertCollectableLive in the heap dump.
      * It can also be found the report accessible by the method getReport.
      */
-    synchronized static public void markCollectable(String name, Object ref) {
+    synchronized static public <T> void markCollectable(String name, T ref) {
         Objects.requireNonNull(ref);
 
         CollectableEntry entry = new CollectableEntry(new Date(), name);
-        AssertCollectableLive pRef = new AssertCollectableLive(name, ref, () -> {
+        AssertCollectableLive<T> pRef = new AssertCollectableLive<>(name, ref, () -> {
             removeCollectable(entry);
         });
         collectables.add(entry);
@@ -26,7 +25,7 @@ public class JMemoryBuddyLive {
     }
 
     private synchronized static void removeCollectable(CollectableEntry entry) {
-        collectedEntrys += 1;
+        collectedEntries += 1;
         collectables.remove(entry);
     }
 
@@ -37,7 +36,7 @@ public class JMemoryBuddyLive {
      */
     synchronized static public Report getReport() {
         return new Report(
-                collectedEntrys,
+                collectedEntries,
                 collectables.stream().sorted((a, b) -> a.collectableSince.compareTo(b.collectableSince))
                         .collect(Collectors.toList()));
     }
@@ -59,9 +58,9 @@ public class JMemoryBuddyLive {
         }
     }
 
-    static class AssertCollectableLive extends CleanupDetector.WeakReferenceWithRunnable {
+    static class AssertCollectableLive<T> extends CleanupDetector.WeakReferenceWithRunnable<T> {
         String name;
-        AssertCollectableLive(String name, Object ref, Runnable r) {
+        AssertCollectableLive(String name, T ref, Runnable r) {
             super(ref, r);
             this.name = name;
         }
