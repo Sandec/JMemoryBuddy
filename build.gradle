@@ -21,8 +21,8 @@ group = 'de.sandec'
 archivesBaseName = "$ARCHIVE_BASE_NAME"
 version = "$JMEMORYBUDDY_VERSION"
 
-sourceCompatibility = 8
-targetCompatibility = 8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 java {
   withSourcesJar()
@@ -32,13 +32,23 @@ java {
 dependencies {
 //  implementation 'org.openjdk.jol:jol-core:0.17'
 
+  testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
   testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
-  testImplementation "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+  testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+  testRuntimeOnly "ch.qos.logback:logback-classic:$LOGBACK_VERSION"
 }
 
 test {
+  useJUnitPlatform()
+
   testLogging {
     events "passed", "skipped", "failed"
+    showStandardStreams = true
+    showExceptions true
+    showCauses true
+    showStackTraces true
+    exceptionFormat "full"
   }
 }
 
