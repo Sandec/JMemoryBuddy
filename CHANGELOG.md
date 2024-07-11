@@ -1,5 +1,5 @@
 ### 0.5.5
-* Parameterize classes and methods providing better type safety
+* Modularize `JMemoryBuddy` artifact to be in compliance with the Java Platform Module System.
 * Set minimum Java version to 11
 * Enable JUnit 5 tests running in the CI builds
 
