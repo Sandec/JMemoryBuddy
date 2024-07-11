@@ -15,7 +15,7 @@ The library is published at MavenCentral
 <dependency>
   <groupId>de.sandec</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.5.4</version>
+  <version>0.5.5</version>
   <scope>test</scope>
 </dependency>
 ```
