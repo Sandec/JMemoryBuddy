@@ -23,7 +23,7 @@ The library is published at MavenCentral
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.5.4"
+    compile "de.sandec:JMemoryBuddy:0.5.5"
 }
 ```
 
