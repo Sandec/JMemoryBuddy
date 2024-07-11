@@ -13,11 +13,11 @@ public class JMemoryBuddyLive {
      * it can be found by searching for the class AssertCollectableLive in the heap dump.
      * It can also be found the report accessible by the method getReport.
      */
-    synchronized static public <T> void markCollectable(String name, T ref) {
+    synchronized static public void markCollectable(String name, Object ref) {
         Objects.requireNonNull(ref);
 
         CollectableEntry entry = new CollectableEntry(new Date(), name);
-        AssertCollectableLive<T> pRef = new AssertCollectableLive<>(name, ref, () -> removeCollectable(entry));
+        AssertCollectableLive pRef = new AssertCollectableLive(name, ref, () -> removeCollectable(entry));
         collectables.add(entry);
         CleanupDetector.onCleanup(pRef);
     }
@@ -56,9 +56,9 @@ public class JMemoryBuddyLive {
         }
     }
 
-    static class AssertCollectableLive<T> extends CleanupDetector.WeakReferenceWithRunnable<T> {
+    static class AssertCollectableLive extends CleanupDetector.WeakReferenceWithRunnable {
         String name;
-        AssertCollectableLive(String name, T ref, Runnable r) {
+        AssertCollectableLive(String name, Object ref, Runnable r) {
             super(ref, r);
             this.name = name;
         }
