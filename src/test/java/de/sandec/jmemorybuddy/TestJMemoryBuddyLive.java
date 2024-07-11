@@ -1,12 +1,10 @@
 package de.sandec.jmemorybuddy;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import de.sandec.jmemorybuddy.JMemoryBuddy;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
 
 public class TestJMemoryBuddyLive {
+
     @Test
     public void testMarkKeepsGCBehaviour() throws InterruptedException {
 
@@ -17,7 +15,7 @@ public class TestJMemoryBuddyLive {
             checker.assertCollectable(o);
         });
         Thread.sleep(50); // we might have a slight delay,
-                                   // because processing the collection might happen slightly delayed.
+        // because processing the collection might happen slightly delayed.
         Assertions.assertEquals(initialCollected + 1, JMemoryBuddyLive.getReport().collectedEntries);
     }
 }

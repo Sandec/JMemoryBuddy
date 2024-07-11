@@ -1,6 +1,7 @@
 package de.sandec.jmemorybuddy;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
+
 import javax.management.MBeanServer;
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
-
 
 /**
  * JMemoryBuddy provides various methods to test for memory leaks.
@@ -21,11 +20,11 @@ import java.util.function.Function;
  */
 public class JMemoryBuddy {
 
-    private static int steps;
-    private static int testDuration;
-    private static int sleepDuration;
-    private static boolean createHeapdump;
-    private static int garbageAmount = 999999;
+    private static final int steps;
+    private static final int testDuration;
+    private static final int sleepDuration;
+    private static final boolean createHeapdump;
+    private static final int garbageAmount;
     private static String mxBeanProxyName = "com.sun.management:type=HotSpotDiagnostic";
     private static String outputFolderString = ".";
 
@@ -49,7 +48,7 @@ public class JMemoryBuddy {
     }
 
     static void createGarbage() {
-        LinkedList list = new LinkedList<Integer>();
+        LinkedList<Integer> list = new LinkedList<>();
         int counter = 0;
         while (counter < garbageAmount) {
             counter += 1;
@@ -61,7 +60,7 @@ public class JMemoryBuddy {
      * Checks whether the content of the WeakReference can be collected.
      * @param weakReference The WeakReference to check.
      */
-    public static void assertCollectable(WeakReference weakReference) {
+    public static void assertCollectable(WeakReference<?> weakReference) {
         if (!checkCollectable(weakReference)) {
             AssertCollectable assertCollectable = new AssertCollectable(weakReference);
             createHeapDump();
@@ -74,11 +73,11 @@ public class JMemoryBuddy {
      * @param weakReference The WeakReference to check.
      * @return Returns true, when the provided WeakReference can be collected.
      */
-    public static boolean checkCollectable(WeakReference weakReference) {
+    public static boolean checkCollectable(WeakReference<?> weakReference) {
         return checkCollectable(steps, weakReference) > 0;
     }
 
-    private static int checkCollectable(int stepsLeft, WeakReference weakReference) {
+    private static int checkCollectable(int stepsLeft, WeakReference<?> weakReference) {
         int counter = stepsLeft;
 
         if (weakReference.get() != null) {
@@ -100,7 +99,7 @@ public class JMemoryBuddy {
         }
 
         if (weakReference.get() == null && counter < steps / 3) {
-            int percentageUsed = (int) ((steps - counter) / steps * 100);
+            int percentageUsed = (steps - counter) / steps * 100;
             System.out.println("Warning test seems to be unstable. time used: " + percentageUsed + "%");
         }
 
@@ -111,7 +110,7 @@ public class JMemoryBuddy {
      * Checks whether the content of the WeakReference cannot be collected.
      * @param weakReference The WeakReference to check.
      */
-    public static void assertNotCollectable(WeakReference weakReference) {
+    public static void assertNotCollectable(WeakReference<Object> weakReference) {
         if (!checkNotCollectable(weakReference)) {
             throw new AssertionError("Content of WeakReference was collected!");
         }
@@ -122,7 +121,7 @@ public class JMemoryBuddy {
      * @param weakReference The WeakReference to check.
      * @return Returns true, when the provided WeakReference cannot be collected.
      */
-    public static boolean checkNotCollectable(WeakReference weakReference) {
+    public static boolean checkNotCollectable(WeakReference<?> weakReference) {
         createGarbage();
         System.gc();
         System.runFinalization();
@@ -134,17 +133,17 @@ public class JMemoryBuddy {
     /**
      * A standard method to define a test which checks code for specific memory semantic.
      * The parameter of the lambda provides an API to define the required memory semantic.
-     * @param f A function which get's executed with the API to define the required memory semantic.
+     * @param f A function which gets executed with the API to define the required memory semantic.
      */
     public static void memoryTest(Consumer<MemoryTestAPI> f) {
-        LinkedList<WeakReference> toBeCollected = new LinkedList<WeakReference>();
-        LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<AssertNotCollectable>();
-        LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<SetAsReferenced>();
+        LinkedList<WeakReference<?>> toBeCollected = new LinkedList<>();
+        LinkedList<AssertNotCollectable> toBeNotCollected = new LinkedList<>();
+        LinkedList<SetAsReferenced> toBeReferenced = new LinkedList<>();
 
         f.accept(new MemoryTestAPI() {
             public void assertCollectable(Object ref) {
                 Objects.requireNonNull(ref);
-                toBeCollected.add(new WeakReference<Object>(ref));
+                toBeCollected.add(new WeakReference<>(ref));
             }
             public void assertNotCollectable(Object ref) {
                 Objects.requireNonNull(ref);
@@ -159,7 +158,7 @@ public class JMemoryBuddy {
         int stepsLeft = steps;
         boolean failed = false;
 
-        for (WeakReference wRef: toBeCollected) {
+        for (WeakReference<?> wRef: toBeCollected) {
             stepsLeft = checkCollectable(stepsLeft, wRef);
         }
         if (stepsLeft == 0) {
@@ -172,10 +171,10 @@ public class JMemoryBuddy {
         }
 
         if (failed) {
-            LinkedList<AssertCollectable> toBeCollectedMarked = new LinkedList<AssertCollectable>();
-            LinkedList<AssertNotCollectable> toBeNotCollectedMarked = new LinkedList<AssertNotCollectable>();
+            LinkedList<AssertCollectable> toBeCollectedMarked = new LinkedList<>();
+            LinkedList<AssertNotCollectable> toBeNotCollectedMarked = new LinkedList<>();
 
-            for (WeakReference wRef: toBeCollected) {
+            for (WeakReference<?> wRef: toBeCollected) {
                 if (wRef.get() != null) {
                     toBeCollectedMarked.add(new AssertCollectable(wRef));
                 }
@@ -219,43 +218,43 @@ public class JMemoryBuddy {
 
     private static HotSpotDiagnosticMXBean getHotspotMBean() throws IOException {
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-        HotSpotDiagnosticMXBean bean =
-                ManagementFactory.newPlatformMXBeanProxy(server,
-                        mxBeanProxyName, HotSpotDiagnosticMXBean.class);
-        return bean;
+        return ManagementFactory.newPlatformMXBeanProxy(server,
+                mxBeanProxyName, HotSpotDiagnosticMXBean.class);
     }
 
     /**
      * This class provides different methods, which can be used to declare memory-constraints.
      * You can get an instance through the lambda of the method JMemoryBuddy.memoryTest.
      */
-    public static interface MemoryTestAPI {
+    public interface MemoryTestAPI {
+
         /**
-         * After executing the lambda, the provided ref must be collectable. Otherwise an Exception is thrown.
+         * After executing the lambda, the provided ref must be collectable. Otherwise, an Exception is thrown.
          * @param ref The reference which should be collectable.
          */
-        public void assertCollectable(Object ref);
+        void assertCollectable(Object ref);
+
         /**
-         * After executing the lambda, the provided ref must be not collectable. Otherwise an Exception is thrown.
+         * After executing the lambda, the provided ref must be not collectable. Otherwise, an Exception is thrown.
          * @param ref The reference which should not be collectable.
          */
-        public void assertNotCollectable(Object ref);
+        void assertNotCollectable(Object ref);
 
         /**
          * The provided reference will be reference hard, so it won't be collected, until memoryTest finishes.
          * @param ref The reference which should get a hard reference for this test.
          */
-        public void setAsReferenced(Object ref);
+        void setAsReferenced(Object ref);
     }
 
     static class AssertCollectable {
-        WeakReference<Object> assertCollectable;
+        WeakReference<?> assertCollectable;
 
-        AssertCollectable(WeakReference<Object> ref) {
+        AssertCollectable(WeakReference<?> ref) {
             this.assertCollectable = ref;
         }
 
-        WeakReference<Object> getWeakReference() {
+        WeakReference<?> getWeakReference() {
             return assertCollectable;
         }
 
@@ -267,7 +266,7 @@ public class JMemoryBuddy {
     }
 
     private static class AssertNotCollectable {
-        WeakReference<Object> assertNotCollectable;
+        WeakReference<?> assertNotCollectable;
         String originalResultOfToString;
 
         AssertNotCollectable(Object ref) {
@@ -275,7 +274,7 @@ public class JMemoryBuddy {
             originalResultOfToString = ref.toString();
         }
 
-        WeakReference<Object> getWeakReference() {
+        WeakReference<?> getWeakReference() {
             return assertNotCollectable;
         }
 
@@ -292,5 +291,4 @@ public class JMemoryBuddy {
             this.setAsReferenced = ref;
         }
     }
-
 }

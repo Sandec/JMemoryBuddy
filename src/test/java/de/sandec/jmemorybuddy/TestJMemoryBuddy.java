@@ -1,8 +1,8 @@
 package de.sandec.jmemorybuddy;
 
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -35,7 +35,7 @@ public class TestJMemoryBuddy {
 
     @Test
     public void simpleTest3() {
-        for(int i = 0; i < 5; i += 1) {
+        for (int i = 0; i < 5; i += 1) {
             A referenced = new A();
             JMemoryBuddy.memoryTest(checker -> {
                 A notReferenced = new A();
@@ -54,7 +54,7 @@ public class TestJMemoryBuddy {
 
     @Test
     public void simpleTestRepeated() {
-        for(int i = 0; i < 100; i += 1) {
+        for (int i = 0; i < 100; i += 1) {
             A referenced = new A();
             JMemoryBuddy.memoryTest(checker -> {
                 A notReferenced = new A();
@@ -107,7 +107,7 @@ public class TestJMemoryBuddy {
             Object a = new Object();
             Object o = new Object() {
                 @Override
-                public void finalize() {
+                protected void finalize() {
                     System.out.println("Finalized!");
                     ref[0] = null;
                 }
@@ -157,14 +157,14 @@ public class TestJMemoryBuddy {
                 Object[] a = new Object[1];
                 Object o = new Object() {
                     @Override
-                    public void finalize() {
+                    protected void finalize() {
                         System.out.println("Finalized!");
                         ref[0] = a[0];
                         a[0] = null;
                     }
                 };
                 a[0] = new Object();
-                wref[0] = new WeakReference(a[0]);
+                wref[0] = new WeakReference<>(a[0]);
                 checker.assertCollectable(o);
                 System.out.println("Not collectable: " + a[0]);
                 checker.assertNotCollectable(a[0]);

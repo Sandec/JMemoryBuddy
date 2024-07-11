@@ -1,12 +1,11 @@
 package de.sandec.jmemorybuddy;
 
-import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class JMemoryBuddyLive {
 
-    static int collectedEntrys = 0;
+    static int collectedEntries = 0;
     static Set<CollectableEntry> collectables = new HashSet<>();
 
     /**
@@ -18,15 +17,13 @@ public class JMemoryBuddyLive {
         Objects.requireNonNull(ref);
 
         CollectableEntry entry = new CollectableEntry(new Date(), name);
-        AssertCollectableLive pRef = new AssertCollectableLive(name, ref, () -> {
-            removeCollectable(entry);
-        });
+        AssertCollectableLive pRef = new AssertCollectableLive(name, ref, () -> removeCollectable(entry));
         collectables.add(entry);
         CleanupDetector.onCleanup(pRef);
     }
 
     private synchronized static void removeCollectable(CollectableEntry entry) {
-        collectedEntrys += 1;
+        collectedEntries += 1;
         collectables.remove(entry);
     }
 
@@ -37,8 +34,8 @@ public class JMemoryBuddyLive {
      */
     synchronized static public Report getReport() {
         return new Report(
-                collectedEntrys,
-                collectables.stream().sorted((a, b) -> a.collectableSince.compareTo(b.collectableSince))
+                collectedEntries,
+                collectables.stream().sorted(Comparator.comparing(a -> a.collectableSince))
                         .collect(Collectors.toList()));
     }
 

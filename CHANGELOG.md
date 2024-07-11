@@ -1,3 +1,8 @@
+### 0.5.5
+* Parameterize classes and methods providing better type safety
+* Set minimum Java version to 11
+* Enable JUnit 5 tests running in the CI builds
+
 ### 0.5.4
 * Slightly improved error messages
 * Updated CI to use also use Java17 and Java21
