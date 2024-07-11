@@ -1,3 +1,0 @@
-##JMemoryBuddy
-
-Helps you
