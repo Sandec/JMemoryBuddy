@@ -1,4 +1,4 @@
-package de.sandec.jmemorybuddy;
+package one.jpro.jmemorybuddy;
 
 import java.util.*;
 import java.util.stream.Collectors;

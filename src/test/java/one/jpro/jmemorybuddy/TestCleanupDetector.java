@@ -1,4 +1,4 @@
-package de.sandec.jmemorybuddy;
+package one.jpro.jmemorybuddy;
 
 import org.junit.jupiter.api.Test;
 

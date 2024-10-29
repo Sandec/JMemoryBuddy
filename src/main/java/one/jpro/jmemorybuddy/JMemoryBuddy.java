@@ -1,4 +1,4 @@
-package de.sandec.jmemorybuddy;
+package one.jpro.jmemorybuddy;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 

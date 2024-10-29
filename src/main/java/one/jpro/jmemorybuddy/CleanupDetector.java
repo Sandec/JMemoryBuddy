@@ -1,4 +1,4 @@
-package de.sandec.jmemorybuddy;
+package one.jpro.jmemorybuddy;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;

@@ -5,5 +5,5 @@ module one.jpro.jmemorybuddy {
     requires java.management;
     requires jdk.management;
 
-    exports de.sandec.jmemorybuddy;
+    exports one.jpro.jmemorybuddy;
 }
