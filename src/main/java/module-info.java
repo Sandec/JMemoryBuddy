@@ -1,7 +1,7 @@
 /**
  * Module descriptor for the JMemoryBuddy module.
  */
-module de.sandec.jmemorybuddy {
+module one.jpro.jmemorybuddy {
     requires java.management;
     requires jdk.management;
 
