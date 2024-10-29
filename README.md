@@ -1,5 +1,6 @@
 # JMemoryBuddy
-[![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/one.jpro/JMemoryBuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/one.jpro/JMemoryBuddy)
+![Build Status](https://github.com/Sandec/JMemoryBuddy/actions/workflows/main.yml/badge.svg)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/one.jpro/jmemorybuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/one.jpro/jmemorybuddy)
 
 JMemoryBuddy provides an API to unit-test your code for memory leaks.
 It also provides an API to monitor a running JVM for memory leaks.
