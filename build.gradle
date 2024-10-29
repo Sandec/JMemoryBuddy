@@ -1,136 +1,108 @@
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-}
-
 plugins {
-  id "io.github.gradle-nexus.publish-plugin" version "$NEXUS_PUBLISH_PLUGIN_VERSION"
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+    id 'tech.yanand.maven-central-publish' version "$MAVEN_CENTRAL_PUBLISH_PLUGIN_VERSION"
 }
 
-repositories {
-  mavenCentral()
-}
-
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
-
-
-group = 'de.sandec'
-archivesBaseName = "$ARCHIVE_BASE_NAME"
+group = 'one.jpro'
 version = "$JMEMORYBUDDY_VERSION"
 
 java {
-  sourceCompatibility = 11
-  targetCompatibility = 11
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    // Sonatype officially requires Java source and Java doc
+    withJavadocJar()
+    withSourcesJar()
 }
 
 dependencies {
-  testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
-  testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
-  testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
-  testRuntimeOnly "ch.qos.logback:logback-classic:$LOGBACK_VERSION"
+    testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+    testRuntimeOnly "ch.qos.logback:logback-classic:$LOGBACK_VERSION"
 }
 
 test {
-  useJUnitPlatform()
+    useJUnitPlatform()
 
-  testLogging {
-    events "passed", "skipped", "failed"
-    showStandardStreams = true
-    showExceptions true
-    showCauses true
-    showStackTraces true
-    exceptionFormat "full"
-  }
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        exceptionFormat "full"
+    }
 }
 
 publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
-      groupId project.group
-      artifactId "JMemoryBuddy"
-      version project.version
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId project.group
+            artifactId project.name.toLowerCase()
+            version project.version
 
-      pom {
-        packaging = 'jar'
-        name = 'JMemoryBuddy'
-        // optionally artifactId can be defined here
-        description = 'A library usefull for unit testing memory leaks'
-        url = 'https://github.com/Sandec/jmemorybuddy'
+            pom {
+                name = project.name
+                description = 'A library usefull for unit testing memory leaks'
+                url = 'https://github.com/Sandec/jmemorybuddy'
 
-        scm {
-          connection = 'https://github.com/Sandec/JMemoryBuddy.git'
-          developerConnection = 'https://github.com/Sandec/JMemoryBuddy.git'
-          url = 'https://github.com/Sandec/JMemoryBuddy.git'
+                scm {
+                    connection = 'https://github.com/Sandec/JMemoryBuddy.git'
+                    developerConnection = 'https://github.com/Sandec/JMemoryBuddy.git'
+                    url = 'https://github.com/Sandec/JMemoryBuddy.git'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'floriankirmaier'
+                        name = 'Florian Kirmaier'
+                        email = 'florian.kirmaier@gmail.com'
+                    }
+                }
+            }
         }
-
-        licenses {
-          license {
-            name = 'The Apache License, Version 2.0'
-            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          }
-        }
-
-        developers {
-          developer {
-            id = 'floriankirmaier'
-            name = 'Florian Kirmaier'
-            email = 'florian.kirmaier@gmail.com'
-          }
-        }
-      }
     }
-  }
-
-  java {
-    withSourcesJar()
-    withJavadocJar()
-  }
-
-  repositories {
-    maven {
-      name = "artifactory"
-      url = "https://sandec.jfrog.io/artifactory/repo"
-      credentials {
-        username System.getenv("SANDEC_ARTIFACTORY_USERNAME")
-        password System.getenv("SANDEC_ARTIFACTORY_PASSWORD")
-      }
-    }
-  }
-}
-
-if (project.hasProperty('ossrhUsername')) {
-  signing {
-    //def signingKey = findProperty("signing.secretKeyRingFile")
-    //def signingPassword = findProperty("signing.password")
-    //useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.mavenJava
-  }
-
-
-  nexusPublishing {
-    //packageGroup = "com.example.mycompany.myproject"  //defaults to 'project.group'
 
     repositories {
-      sonatype {   //or custom repository name
-        //stagingProfileId = "yourStagingProfileId" //can reduce execution time by even 10 seconds
-
-        //defaults to project properties 'sonatypeUsername' and 'sonatypePassword', where 'sonatype' is name of configured repository
-        username = ossrhUsername
-        password = ossrhPassword
-      }
+        maven {
+            name = "artifactory"
+            url = "https://sandec.jfrog.io/artifactory/repo"
+            credentials {
+                username System.getenv("SANDEC_ARTIFACTORY_USERNAME")
+                password System.getenv("SANDEC_ARTIFACTORY_PASSWORD")
+            }
+        }
+        maven {
+            name = "staging-deploy"
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
     }
+}
 
-    clientTimeout = Duration.ofSeconds(300)
-    connectTimeout = Duration.ofSeconds(60)
+signing {
+    useInMemoryPgpKeys (
+            System.getenv("SANDEC_SIGNING_KEY_ID"),
+            System.getenv("SANDEC_SIGNING_SECRET_KEY"),
+            System.getenv("SANDEC_SIGNING_PASSWORD")
+    )
 
-    transitionCheckOptions {
-      maxRetries.set(40)
-      delayBetween.set(java.time.Duration.ofMillis(3000))
-    }
-  }
+    sign publishing.publications.mavenJava
+}
+
+mavenCentral {
+    repoDir = layout.buildDirectory.dir('staging-deploy')
+    authToken = System.getenv("SANDEC_SONATYPE_AUTH_TOKEN")
+    publishingType = 'USER_MANAGED'
 }
