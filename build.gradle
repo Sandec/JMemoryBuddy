@@ -49,12 +49,12 @@ publishing {
             pom {
                 name = project.name
                 description = 'A library usefull for unit testing memory leaks'
-                url = 'https://github.com/Sandec/jmemorybuddy'
+                url = 'https://github.com/Sandec/JMemoryBuddy'
 
                 scm {
                     connection = 'https://github.com/Sandec/JMemoryBuddy.git'
                     developerConnection = 'https://github.com/Sandec/JMemoryBuddy.git'
-                    url = 'https://github.com/Sandec/JMemoryBuddy.git'
+                    url = 'https://github.com/Sandec/JMemoryBuddy'
                 }
 
                 licenses {
