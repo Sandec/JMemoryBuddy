@@ -17,6 +17,10 @@ java {
     withSourcesJar()
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
