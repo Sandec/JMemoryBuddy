@@ -1,5 +1,5 @@
 # JMemoryBuddy
-[![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sandec/JMemoryBuddy)
+[![Build Status](https://travis-ci.com/Sandec/JMemoryBuddy.svg?branch=master)](https://travis-ci.com/Sandec/JMemoryBuddy) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/one.jpro/JMemoryBuddy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/one.jpro/JMemoryBuddy)
 
 JMemoryBuddy provides an API to unit-test your code for memory leaks.
 It also provides an API to monitor a running JVM for memory leaks.
@@ -13,9 +13,9 @@ The library is published at MavenCentral
 #### Maven 
 ```
 <dependency>
-  <groupId>de.sandec</groupId>
+  <groupId>one.jpro</groupId>
   <artifactId>JMemoryBuddy</artifactId>
-  <version>0.5.5</version>
+  <version>0.5.6</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -23,7 +23,7 @@ The library is published at MavenCentral
 #### Gradle
 ```
 dependencies {
-    compile "de.sandec:JMemoryBuddy:0.5.5"
+    compile "one.jpro:JMemoryBuddy:0.5.6"
 }
 ```
 

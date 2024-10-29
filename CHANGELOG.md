@@ -1,4 +1,7 @@
-### 0.5.6 (TBD)
+### 0.5.6 (October 29, 2024)
+* Changed module name to `one.jpro.jmemorybuddy`.
+* Changed root package to `one.jpro.jmemorybuddy`.
+* Updated Gradle build configuration to publish to Maven Central Sonatype.
 
 ### 0.5.5 (July 11, 2024)
 * Modularize `JMemoryBuddy` artifact to be in compliance with the Java Platform Module System.
