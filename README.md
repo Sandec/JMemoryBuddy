@@ -15,7 +15,7 @@ The library is published at MavenCentral
 ```
 <dependency>
   <groupId>one.jpro</groupId>
-  <artifactId>JMemoryBuddy</artifactId>
+  <artifactId>jmemorybuddy</artifactId>
   <version>0.5.6</version>
   <scope>test</scope>
 </dependency>
