@@ -6,7 +6,23 @@ plugins {
 }
 
 group = 'one.jpro'
-version = "$JMEMORYBUDDY_VERSION"
+
+// The version is derived from the latest reachable git tag (X.Y.Z, no prefix):
+//   - HEAD exactly on the tag, clean tree  -> X.Y.Z (release build)
+//   - commits after the tag, or dirty tree -> X.Y.(Z+1)-SNAPSHOT
+//   - no tag / no git                      -> 0.5.7-SNAPSHOT
+def gitDescribe = providers.exec {
+    commandLine 'git', 'describe', '--tags', '--dirty', '--match', '[0-9]*'
+    ignoreExitValue = true
+}.standardOutput.asText.map { it.trim() }
+version = {
+    def matcher = gitDescribe.getOrElse('') =~ /^(\d+)\.(\d+)\.(\d+)(-\d+-g[0-9a-f]+)?(-dirty)?$/
+    if (!matcher.matches()) return '0.5.7-SNAPSHOT'
+    def (major, minor, patch) = [matcher.group(1), matcher.group(2), matcher.group(3).toInteger()]
+    def isRelease = matcher.group(4) == null && matcher.group(5) == null
+    isRelease ? "${major}.${minor}.${patch}" : "${major}.${minor}.${patch + 1}-SNAPSHOT"
+}()
+logger.quiet("Version derived from git tags: {} (git describe: {})", version, gitDescribe.getOrElse('') ?: '<no tag found>')
 
 java {
     sourceCompatibility = 11
@@ -108,5 +124,5 @@ signing {
 mavenCentral {
     repoDir = layout.buildDirectory.dir('staging-deploy')
     authToken = System.getenv("SANDEC_SONATYPE_AUTH_TOKEN")
-    publishingType = 'USER_MANAGED'
+    publishingType = 'AUTOMATIC'
 }

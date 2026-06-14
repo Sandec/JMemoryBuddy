@@ -180,4 +180,43 @@ public class TestJMemoryBuddy {
     public void testCreateHeapDump() {
         JMemoryBuddy.createHeapDump(); // shouldn't throw an exception
     }
+
+    static class Holder { Object field; }
+
+    @Test
+    public void multiHopPath() {
+        Holder holder = new Holder();
+        Throwable e = Assertions.assertThrows(AssertionError.class, () -> {
+            JMemoryBuddy.memoryTest(checker -> {
+                Object leaked = new Object();
+                holder.field = leaked;            // leaked is reachable via holder.field
+                checker.assertCollectable(leaked);
+            });
+        });
+        System.out.println("multiHopPath message: " + e.getMessage());
+    }
+
+    static class Node { Object next; }
+
+    // The leak is reachable only through a chain of `depth` Node.next hops from a GC root,
+    // so the printed path must be exactly that deep — verifies the parser/BFS handle long chains.
+    private void chainOfDepth(int depth) {
+        Node head = new Node();
+        Node cur = head;
+        for (int i = 0; i < depth; i++) { Node n = new Node(); cur.next = n; cur = n; }
+        // `cur` is the tail; do not keep a separate local to it (that would be a direct GC root).
+        cur = null;
+        Throwable e = Assertions.assertThrows(AssertionError.class, () ->
+                JMemoryBuddy.memoryTest(checker -> {
+                    Object tail = head;
+                    while (((Node) tail).next != null) tail = ((Node) tail).next;
+                    checker.assertCollectable(tail);     // held only via head -> ...depth... -> tail
+                }));
+        java.lang.ref.Reference.reachabilityFence(head);
+        System.out.println("chainOfDepth(" + depth + "): " + e.getMessage());
+    }
+
+    @Test public void chain10()   { chainOfDepth(10); }
+    @Test public void chain100()  { chainOfDepth(100); }
+    @Test public void chain1000() { chainOfDepth(1000); }
 }

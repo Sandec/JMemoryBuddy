@@ -60,7 +60,17 @@ You can also use the method `assertCollectable` and `assertNotCollectable` to ch
 
 
 #### Analyzing the heap dump:
-JMemoryBuddy makes it easy to analyze the heap dump because all problematic instances are wrapped inside a class with the name `AssertCollectable`. Just search your heap dump with your prefered tool for this class name:
+On a failed leak check JMemoryBuddy reads back the heap dump and prints the strong-reference path from a GC root to each not-collected object directly in the test output — usually enough to find the cause without opening any tool:
+
+```
+JMemoryBuddy — path to GC root for leak: PageDoc @58a903060:
+  GC root [Java frame] DataRepository
+    ↓ DataRepository.listeners
+  ...
+  PageDoc   ← leaked
+```
+
+Disable with `-Djmemorybuddy.printPath=false`. For a deeper look, open the dump in your preferred tool — all watched instances are referenced by a `TrackedWeakReference`, so you can search for that class name:
 ![visualvm](/screenshot-visualvm.png)
 
 
@@ -74,6 +84,8 @@ You can configure VisualVM with SystemProperties:
 | Tables        | Effect           | Default  |
 | ------------- |:-------------:| -----:|
 | -Djmemorybuddy.createHeapDump    | Should a heap dump created on failure? | true |
+| -Djmemorybuddy.printPath    | Print the path from a GC root to each not-collected object on failure. | true |
+| -Djmemorybuddy.maxObjects    | Skip the path analysis when the dump has more objects than this (avoids heavy in-process analysis). | 8000000 |
 | -Djmemorybuddy.output    | The folder where the heap dump gets saved. | if target exists, then "target" otherwise "build" |
 
 The following values usually shouldn't be changed but might be useful to make tests more stable or reduce the time required.

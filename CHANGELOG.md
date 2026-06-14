@@ -1,5 +1,5 @@
-### 0.5.7 (TBD)
-
+### 0.6.0 (June 14, 2026)
+* On a failed leak check, JMemoryBuddy now reads back the heap dump it creates and prints the strong-reference path from a GC root to each not-collected object — no need to open VisualVM/MAT for the common case. Dependency-free; disable with `-Djmemorybuddy.printPath=false`.
 
 ### 0.5.6 (October 29, 2024)
 * Changed module name to `one.jpro.jmemorybuddy`.
