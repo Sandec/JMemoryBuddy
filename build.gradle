@@ -42,6 +42,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.11.3" // required explicitly since Gradle 9
     testRuntimeOnly "ch.qos.logback:logback-classic:$LOGBACK_VERSION"
 }
 
