@@ -1,0 +1,38 @@
+> Task :compileJava UP-TO-DATE
+> Task :processResources NO-SOURCE
+> Task :classes UP-TO-DATE
+
+> Task :compileTestJava
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/test/java/one/jpro/jmemorybuddy/TestJMemoryBuddy.java:110: warning: [removal] finalize() in Object has been deprecated and marked for removal
+                protected void finalize() {
+                               ^
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/test/java/one/jpro/jmemorybuddy/TestJMemoryBuddy.java:160: warning: [removal] finalize() in Object has been deprecated and marked for removal
+                    protected void finalize() {
+                                   ^
+2 warnings
+
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+
+TestJMemoryBuddy > multiHopPath() STANDARD_OUT
+    Creating Heapdump at: /Users/floriankirmaier/projects/claude/JMemoryBuddy/build/heapdump_jmemb_2026-06-14_15-47-07.hprof
+
+    JMemoryBuddy — path to GC root for leak: Object @58a903060:
+      GC root [Java frame] TestJMemoryBuddy$Holder
+        ↓ TestJMemoryBuddy$Holder.field
+      Object   ← leaked
+
+    multiHopPath message: The following references should be collected: [java.lang.Object@3bd323e9]
+
+TestJMemoryBuddy > multiHopPath() PASSED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2s
+3 actionable tasks: 2 executed, 1 up-to-date

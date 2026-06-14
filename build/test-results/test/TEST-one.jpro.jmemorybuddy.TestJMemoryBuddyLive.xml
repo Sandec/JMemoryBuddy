@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="one.jpro.jmemorybuddy.TestJMemoryBuddyLive" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-14T13:47:29" hostname="Florians-MacBook-Pro-ARM.local" time="0.06">
+  <properties/>
+  <testcase name="testMarkKeepsGCBehaviour()" classname="one.jpro.jmemorybuddy.TestJMemoryBuddyLive" time="0.06"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,90 @@
+Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+
+> Task :compileJava
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/main/java/one/jpro/jmemorybuddy/JMemoryBuddy.java:92: warning: [removal] runFinalization() in System has been deprecated and marked for removal
+            System.runFinalization();
+                  ^
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/main/java/one/jpro/jmemorybuddy/JMemoryBuddy.java:104: warning: [removal] runFinalization() in System has been deprecated and marked for removal
+            System.runFinalization();
+                  ^
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/main/java/one/jpro/jmemorybuddy/JMemoryBuddy.java:133: warning: [removal] runFinalization() in System has been deprecated and marked for removal
+        System.runFinalization();
+              ^
+3 warnings
+
+> Task :processResources NO-SOURCE
+> Task :classes
+
+> Task :compileTestJava
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/test/java/one/jpro/jmemorybuddy/TestJMemoryBuddy.java:110: warning: [removal] finalize() in Object has been deprecated and marked for removal
+                protected void finalize() {
+                               ^
+/Users/floriankirmaier/projects/claude/JMemoryBuddy/src/test/java/one/jpro/jmemorybuddy/TestJMemoryBuddy.java:160: warning: [removal] finalize() in Object has been deprecated and marked for removal
+                    protected void finalize() {
+                                   ^
+2 warnings
+
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+
+TestJMemoryBuddy > testCreateHeapDump() STANDARD_OUT
+    Creating Heapdump at: /Users/floriankirmaier/projects/claude/JMemoryBuddy/build/heapdump_jmemb_2026-06-14_15-46-20.hprof
+
+TestJMemoryBuddy > testCreateHeapDump() PASSED
+
+TestJMemoryBuddy > simpleTest() PASSED
+
+TestJMemoryBuddy > simpleTest2() PASSED
+
+TestJMemoryBuddy > simpleTest3() PASSED
+
+TestJMemoryBuddy > negativeTest2() STANDARD_OUT
+    Creating Heapdump at: /Users/floriankirmaier/projects/claude/JMemoryBuddy/build/heapdump_jmemb_2026-06-14_15-46-21.hprof
+    JMemoryBuddy: no tracked references found in the dump; cannot compute a path to the GC root.
+    The following references should not be collected: [[someText]]
+
+TestJMemoryBuddy > negativeTest2() PASSED
+
+TestJMemoryBuddy > testErrorMessages1() STANDARD_OUT
+    Creating Heapdump at: /Users/floriankirmaier/projects/claude/JMemoryBuddy/build/heapdump_jmemb_2026-06-14_15-46-22.hprof
+    JMemoryBuddy: no tracked references found in the dump; cannot compute a path to the GC root.
+
+TestJMemoryBuddy > testErrorMessages1() PASSED
+
+TestJMemoryBuddy > testErrorMessages2() STANDARD_OUT
+    Creating Heapdump at: /Users/floriankirmaier/projects/claude/JMemoryBuddy/build/heapdump_jmemb_2026-06-14_15-46-23.hprof
+
+    JMemoryBuddy — path to GC root for leak: Object @58aa4a348:
+      GC root [Java frame] Object
+
+
+TestJMemoryBuddy > testErrorMessages2() PASSED
+
+TestJMemoryBuddy > clearReferenceOnFinalization() STANDARD_OUT
+    Finalized!
+
+TestJMemoryBuddy > clearReferenceOnFinalization() PASSED
+
+TestJMemoryBuddy > negativeTest() STANDARD_OUT
+    Warning test seems to be unstable. time used: 100%
+    Creating Heapdump at: /Users/floriankirmaier/projects/claude/JMemoryBuddy/build/heapdump_jmemb_2026-06-14_15-46-24.hprof
+
+    JMemoryBuddy — path to GC root for leak: String @58ab06948:
+      GC root [Java frame] String
+
+    The following references should be collected: [someText]
+
+TestJMemoryBuddy > negativeTest() PASSED
+
+TestJMemoryBuddy > simpleTestRepeated() PASSED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 13s
+3 actionable tasks: 3 executed

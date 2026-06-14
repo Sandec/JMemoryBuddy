@@ -180,4 +180,19 @@ public class TestJMemoryBuddy {
     public void testCreateHeapDump() {
         JMemoryBuddy.createHeapDump(); // shouldn't throw an exception
     }
+
+    static class Holder { Object field; }
+
+    @Test
+    public void multiHopPath() {
+        Holder holder = new Holder();
+        Throwable e = Assertions.assertThrows(AssertionError.class, () -> {
+            JMemoryBuddy.memoryTest(checker -> {
+                Object leaked = new Object();
+                holder.field = leaked;            // leaked is reachable via holder.field
+                checker.assertCollectable(leaked);
+            });
+        });
+        System.out.println("multiHopPath message: " + e.getMessage());
+    }
 }

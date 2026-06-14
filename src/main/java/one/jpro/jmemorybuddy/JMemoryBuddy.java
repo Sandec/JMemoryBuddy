@@ -24,6 +24,8 @@ public class JMemoryBuddy {
     private static final int testDuration;
     private static final int sleepDuration;
     private static final boolean createHeapdump;
+    private static final boolean printPath;
+    private static final int maxObjects;
     private static final int garbageAmount;
     private static String mxBeanProxyName = "com.sun.management:type=HotSpotDiagnostic";
     private static String outputFolderString = ".";
@@ -33,6 +35,8 @@ public class JMemoryBuddy {
         testDuration = Integer.parseInt(System.getProperty("jmemorybuddy.testDuration","1000"));
         steps = Integer.parseInt(System.getProperty("jmemorybuddy.steps", "10"));
         createHeapdump = Boolean.parseBoolean(System.getProperty("jmemorybuddy.createHeapdump", "true"));
+        printPath = Boolean.parseBoolean(System.getProperty("jmemorybuddy.printPath", "true"));
+        maxObjects = Integer.parseInt(System.getProperty("jmemorybuddy.maxObjects", "8000000"));
         garbageAmount = Integer.parseInt(System.getProperty("jmemorybuddy.garbageAmount", "99999"));
 
         sleepDuration = testDuration / steps;
@@ -62,8 +66,10 @@ public class JMemoryBuddy {
      */
     public static void assertCollectable(WeakReference<?> weakReference) {
         if (!checkCollectable(weakReference)) {
-            AssertCollectable assertCollectable = new AssertCollectable(weakReference);
-            createHeapDump();
+            // A marker so the object is locatable in the dump — held weakly, so it does not pollute the path.
+            TrackedWeakReference marker = new TrackedWeakReference(weakReference.get());
+            analyzePaths(createHeapDump());
+            java.lang.ref.Reference.reachabilityFence(marker);
             throw new AssertionError("Content of WeakReference was not collected. content: " + weakReference.get());
         }
     }
@@ -143,7 +149,7 @@ public class JMemoryBuddy {
         f.accept(new MemoryTestAPI() {
             public void assertCollectable(Object ref) {
                 Objects.requireNonNull(ref);
-                toBeCollected.add(new WeakReference<>(ref));
+                toBeCollected.add(new TrackedWeakReference(ref));
             }
             public void assertNotCollectable(Object ref) {
                 Objects.requireNonNull(ref);
@@ -184,7 +190,7 @@ public class JMemoryBuddy {
                     toBeNotCollectedMarked.add(wRef);
                 }
             }
-            createHeapDump();
+            analyzePaths(createHeapDump());
             if (toBeNotCollectedMarked.isEmpty()) {
                 throw new AssertionError("The following references should be collected: " + toBeCollectedMarked);
             } else if(toBeCollectedMarked.isEmpty()) {
@@ -195,7 +201,7 @@ public class JMemoryBuddy {
         }
     }
 
-    static void createHeapDump() {
+    static String createHeapDump() {
         if (createHeapdump) {
             try {
                 String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
@@ -204,11 +210,20 @@ public class JMemoryBuddy {
                 String heapdumpFile = new java.io.File(outputFolder, fileName).getAbsolutePath();
                 System.out.println("Creating Heapdump at: " + heapdumpFile);
                 getHotspotMBean().dumpHeap(heapdumpFile, true);
+                return heapdumpFile;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println("No Heapdump was created. You might want to change the configuration to get a HeapDump.");
+        }
+        return null;
+    }
+
+    /** Reads the dump back and prints a strong-reference path from a GC root to each not-collected object. */
+    private static void analyzePaths(String heapDumpFile) {
+        if (printPath && heapDumpFile != null) {
+            HeapPath.printPaths(heapDumpFile, maxObjects);
         }
     }
 
