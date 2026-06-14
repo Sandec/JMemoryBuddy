@@ -123,6 +123,6 @@ signing {
 
 mavenCentral {
     repoDir = layout.buildDirectory.dir('staging-deploy')
-    authToken = System.getenv("SANDEC_SONATYPE_AUTH_TOKEN")
+    authToken = System.getenv("MAVEN_CENTRAL_AUTH_TOKEN")
     publishingType = 'AUTOMATIC'
 }

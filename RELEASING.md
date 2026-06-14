@@ -33,7 +33,7 @@ is no version bump and no bump-back — after the release, builds become `X.Y.(Z
 
 - `SANDEC_ARTIFACTORY_USERNAME` / `SANDEC_ARTIFACTORY_PASSWORD`
 - `SANDEC_SIGNING_KEY_ID` / `SANDEC_SIGNING_SECRET_KEY` / `SANDEC_SIGNING_PASSWORD` — GPG
-- `SANDEC_SONATYPE_AUTH_TOKEN` — Sonatype Central Portal token
+- `MAVEN_CENTRAL_AUTH_TOKEN` — Sonatype Central Portal token
 
 ## Note on the first tag-derived release
 
