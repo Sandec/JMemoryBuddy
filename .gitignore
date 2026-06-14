@@ -1,0 +1,6 @@
+.gradle/
+build/
+.idea/
+.tmp/
+*.hprof
+heapdump_jmemb_*.hprof
